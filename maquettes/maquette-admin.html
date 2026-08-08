@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — PCStore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0e14;
+    --surface: #121824;
+    --surface-2: #171f2e;
+    --line: #232d3f;
+    --text: #e7ecf3;
+    --muted: #7d8aa0;
+    --cyan: #4fe3ff;
+    --violet: #9a7bff;
+    --green: #5cf2a0;
+    --amber: #ffb454;
+    --red: #ff6b6b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--text); font-family:'Inter', sans-serif; -webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Chakra Petch', sans-serif;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer;}
+
+  .layout{display:grid; grid-template-columns:230px 1fr; min-height:100vh;}
+
+  /* SIDEBAR */
+  .sidebar{
+    background:var(--surface); border-right:1px solid var(--line);
+    padding:26px 18px; display:flex; flex-direction:column; gap:4px;
+  }
+  .logo{font-size:1.1rem; font-weight:700; padding:0 10px; margin-bottom:34px;}
+  .logo span{color:var(--cyan);}
+  .nav-item{
+    display:flex; align-items:center; gap:12px; padding:11px 12px; border-radius:8px;
+    color:var(--muted); font-size:0.9rem; border:none; background:none; text-align:left;
+  }
+  .nav-item .dot{width:6px; height:6px; border-radius:50%; background:var(--line);}
+  .nav-item:hover{background:var(--surface-2); color:var(--text);}
+  .nav-item.active{background:var(--surface-2); color:var(--text);}
+  .nav-item.active .dot{background:var(--cyan); box-shadow:0 0 6px var(--cyan);}
+  .sidebar-foot{margin-top:auto; padding:12px 10px; font-size:0.78rem; color:var(--muted); border-top:1px solid var(--line); padding-top:18px;}
+
+  /* MAIN */
+  .main{padding:32px 40px 60px;}
+  .topbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;}
+  .topbar h1{font-size:1.5rem;}
+  .topbar .sub{color:var(--muted); font-size:0.85rem; margin-top:4px;}
+  .admin-chip{
+    display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line);
+    padding:8px 14px 8px 8px; border-radius:30px; font-size:0.85rem;
+  }
+  .avatar{width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg, var(--cyan), var(--violet));}
+
+  /* stats */
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:36px;}
+  .stat{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:20px;}
+  .stat .label{font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;}
+  .stat .value{font-size:1.7rem; font-weight:700; font-family:'Chakra Petch';}
+  .stat .value.amber{color:var(--amber);}
+  .stat .value.green{color:var(--green);}
+
+  /* tabs */
+  .tabs{display:flex; gap:8px; margin-bottom:22px; border-bottom:1px solid var(--line);}
+  .tab{
+    padding:11px 6px; margin-right:20px; color:var(--muted); font-size:0.92rem;
+    border:none; background:none; border-bottom:2px solid transparent; margin-bottom:-1px;
+  }
+  .tab.active{color:var(--text); border-bottom-color:var(--cyan);}
+
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  .panel-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;}
+  .search-bar{
+    background:var(--surface); border:1px solid var(--line); border-radius:8px;
+    padding:9px 14px; font-size:0.85rem; color:var(--muted); width:260px;
+  }
+  .btn-add{
+    background:var(--cyan); color:#04121a; font-weight:600; font-size:0.85rem;
+    padding:10px 18px; border:none; border-radius:7px;
+  }
+
+  /* table */
+  .table-wrap{background:var(--surface); border:1px solid var(--line); border-radius:12px; overflow:hidden;}
+  table{width:100%; border-collapse:collapse;}
+  th{
+    text-align:left; font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--muted);
+    text-transform:uppercase; letter-spacing:0.5px; padding:14px 20px; border-bottom:1px solid var(--line);
+    background:var(--surface-2);
+  }
+  td{padding:16px 20px; border-bottom:1px solid var(--line); font-size:0.88rem;}
+  tr:last-child td{border-bottom:none;}
+  .prod-name{font-weight:600;}
+  .prod-tag{color:var(--muted); font-size:0.78rem; font-family:'JetBrains Mono',monospace;}
+  .stock-badge{
+    font-family:'JetBrains Mono',monospace; font-size:0.78rem; padding:4px 10px; border-radius:20px;
+    display:inline-block;
+  }
+  .stock-badge.ok{color:var(--green); background:rgba(92,242,160,0.1);}
+  .stock-badge.low{color:var(--amber); background:rgba(255,180,84,0.1);}
+  .stock-badge.out{color:var(--red); background:rgba(255,107,107,0.1);}
+  .row-actions{display:flex; gap:8px;}
+  .icon-btn{
+    background:var(--surface-2); border:1px solid var(--line); border-radius:6px; padding:7px 11px;
+    font-size:0.78rem; color:var(--muted);
+  }
+  .icon-btn:hover{border-color:var(--cyan); color:var(--cyan);}
+  .icon-btn.danger:hover{border-color:var(--red); color:var(--red);}
+
+  .status-pill{
+    font-family:'JetBrains Mono',monospace; font-size:0.75rem; padding:5px 11px; border-radius:20px;
+    display:inline-block;
+  }
+  .status-pill.pending{color:var(--amber); background:rgba(255,180,84,0.1);}
+  .status-pill.confirmed{color:var(--green); background:rgba(92,242,160,0.1);}
+
+  .btn-mini{
+    font-size:0.78rem; padding:7px 13px; border-radius:6px; border:1px solid var(--line);
+  }
+  .btn-mini.confirm{border-color:var(--green); color:var(--green);}
+  .btn-mini.cancel{border-color:var(--red); color:var(--red);}
+
+  @media(max-width:1000px){
+    .layout{grid-template-columns:1fr;}
+    .sidebar{display:none;}
+    .stats{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <div class="sidebar">
+    <div class="logo">PC<span>Store</span> <span style="color:var(--muted); font-size:0.7rem; font-family:'JetBrains Mono';">admin</span></div>
+    <button class="nav-item active"><span class="dot"></span>Tableau de bord</button>
+    <button class="nav-item"><span class="dot"></span>Produits</button>
+    <button class="nav-item"><span class="dot"></span>Réservations</button>
+    <button class="nav-item"><span class="dot"></span>Statistiques</button>
+    <button class="nav-item"><span class="dot"></span>Paramètres</button>
+    <div class="sidebar-foot mono">v0.1 — env. test</div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <h1>Tableau de bord</h1>
+        <div class="sub">Vue d'ensemble du catalogue et des réservations</div>
+      </div>
+      <div class="admin-chip">
+        <div class="avatar"></div>
+        Jean Yannick
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="label">Produits actifs</div>
+        <div class="value">18</div>
+      </div>
+      <div class="stat">
+        <div class="label">Réservations en attente</div>
+        <div class="value amber">4</div>
+      </div>
+      <div class="stat">
+        <div class="label">Stock faible</div>
+        <div class="value amber">2</div>
+      </div>
+      <div class="stat">
+        <div class="label">Réservations ce mois</div>
+        <div class="value green">27</div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('produits')">Produits</button>
+      <button class="tab" onclick="showTab('reservations')">Réservations <span style="color:var(--amber)">(4)</span></button>
+    </div>
+
+    <!-- PRODUITS -->
+    <div class="panel active" id="panel-produits">
+      <div class="panel-head">
+        <input class="search-bar" placeholder="Rechercher un produit...">
+        <button class="btn-add">+ Ajouter un produit</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Produit</th>
+              <th>Catégorie</th>
+              <th>Prix</th>
+              <th>Stock</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="prod-name">Studio Pro X</div><div class="prod-tag">Ryzen 9 · RTX 4070 · 32Go</div></td>
+              <td>Création</td>
+              <td class="mono">1 150 000 F</td>
+              <td><span class="stock-badge ok">3 en stock</span></td>
+              <td><div class="row-actions"><button class="icon-btn">Modifier</button><button class="icon-btn danger">Suppr.</button></div></td>
+            </tr>
+            <tr>
+              <td><div class="prod-name">Aster RX-15</div><div class="prod-tag">Ryzen 7 · RTX 4060 · 16Go</div></td>
+              <td>Gaming</td>
+              <td class="mono">720 000 F</td>
+              <td><span class="stock-badge low">1 en stock</span></td>
+              <td><div class="row-actions"><button class="icon-btn">Modifier</button><button class="icon-btn danger">Suppr.</button></div></td>
+            </tr>
+            <tr>
+              <td><div class="prod-name">Nova Slim 14</div><div class="prod-tag">Core i5 · Iris Xe · 8Go</div></td>
+              <td>Bureautique</td>
+              <td class="mono">265 000 F</td>
+              <td><span class="stock-badge ok">7 en stock</span></td>
+              <td><div class="row-actions"><button class="icon-btn">Modifier</button><button class="icon-btn danger">Suppr.</button></div></td>
+            </tr>
+            <tr>
+              <td><div class="prod-name">Dev Edge 13</div><div class="prod-tag">Core i7 · Iris Xe · 16Go</div></td>
+              <td>Développement</td>
+              <td class="mono">480 000 F</td>
+              <td><span class="stock-badge out">Rupture</span></td>
+              <td><div class="row-actions"><button class="icon-btn">Modifier</button><button class="icon-btn danger">Suppr.</button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RESERVATIONS -->
+    <div class="panel" id="panel-reservations">
+      <div class="panel-head">
+        <input class="search-bar" placeholder="Rechercher une réservation...">
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Produit</th>
+              <th>Contact</th>
+              <th>Statut</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="prod-name">Fabrice A.</td>
+              <td>Studio Pro X</td>
+              <td class="mono">+229 97 00 00 00</td>
+              <td><span class="status-pill pending">En attente</span></td>
+              <td><div class="row-actions"><button class="btn-mini confirm">Valider</button><button class="btn-mini cancel">Refuser</button></div></td>
+            </tr>
+            <tr>
+              <td class="prod-name">Rachelle K.</td>
+              <td>Nova Slim 14</td>
+              <td class="mono">+229 96 00 00 00</td>
+              <td><span class="status-pill pending">En attente</span></td>
+              <td><div class="row-actions"><button class="btn-mini confirm">Valider</button><button class="btn-mini cancel">Refuser</button></div></td>
+            </tr>
+            <tr>
+              <td class="prod-name">Miracle H.</td>
+              <td>Aster RX-15</td>
+              <td class="mono">+229 95 00 00 00</td>
+              <td><span class="status-pill confirmed">Confirmée</span></td>
+              <td><div class="row-actions"><button class="icon-btn">Détails</button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function showTab(name){
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById('panel-'+name).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+
+</body>
+</html>

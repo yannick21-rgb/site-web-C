@@ -1,0 +1,176 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0a0e14;
+  --bg-alt: #0e131b;
+  --surface: #121824;
+  --surface-2: #171f2e;
+  --line: #232d3f;
+  --text: #e7ecf3;
+  --muted: #7d8aa0;
+  --cyan: #4fe3ff;
+  --violet: #9a7bff;
+  --green: #5cf2a0;
+  --amber: #ffb454;
+  --red: #ff6b6b;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-inter), "Inter", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-chakra), "Chakra Petch", sans-serif;
+  }
+  .mono {
+    font-family: var(--font-jetbrains), "JetBrains Mono", monospace;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  :focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  .container-site {
+    padding-left: 6%;
+    padding-right: 6%;
+    width: 100%;
+  }
+  .grid-bg {
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
+    position: absolute;
+    inset: 0;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .btn-primary {
+    display: inline-block;
+    background: var(--cyan);
+    color: #04121a;
+    font-weight: 600;
+    padding: 14px 26px;
+    border-radius: 7px;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .btn-primary:hover {
+    opacity: 0.88;
+  }
+  .btn-secondary {
+    display: inline-block;
+    border: 1px solid var(--line);
+    color: var(--text);
+    background: none;
+    padding: 14px 26px;
+    border-radius: 7px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .btn-secondary:hover {
+    border-color: var(--violet);
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    transition: border-color 0.2s;
+  }
+  .card:hover {
+    border-color: var(--cyan);
+  }
+  .card-tag {
+    display: inline-block;
+    font-family: var(--font-jetbrains), "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    color: var(--violet);
+    border: 1px solid var(--violet);
+    padding: 3px 9px;
+    border-radius: 20px;
+  }
+  .spec-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-jetbrains), "JetBrains Mono", monospace;
+  }
+  .spec-row .k {
+    color: var(--muted);
+  }
+  .badge-pill {
+    font-family: var(--font-jetbrains), "JetBrains Mono", monospace;
+    font-size: 0.75rem;
+    padding: 4px 11px;
+    border-radius: 20px;
+    display: inline-block;
+  }
+  .stock-ok { color: var(--green); background: rgba(92, 242, 160, 0.1); }
+  .stock-low { color: var(--amber); background: rgba(255, 180, 84, 0.1); }
+  .stock-out { color: var(--red); background: rgba(255, 107, 107, 0.1); }
+  .status-pending { color: var(--amber); background: rgba(255, 180, 84, 0.1); }
+  .status-confirmed { color: var(--green); background: rgba(92, 242, 160, 0.1); }
+  .status-refused { color: var(--red); background: rgba(255, 107, 107, 0.1); }
+  .field {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    color: var(--text);
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: border-color 0.15s;
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 1px var(--cyan) inset;
+  }
+  .chip {
+    font-family: var(--font-jetbrains), "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    background: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .chip:hover {
+    color: var(--text);
+    border-color: var(--cyan);
+  }
+  .chip.active {
+    color: var(--cyan);
+    border-color: var(--cyan);
+  }
+}

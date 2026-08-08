@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trouver mon PC — PCStore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0e14;
+    --surface: #121824;
+    --surface-2: #171f2e;
+    --line: #232d3f;
+    --text: #e7ecf3;
+    --muted: #7d8aa0;
+    --cyan: #4fe3ff;
+    --violet: #9a7bff;
+    --green: #5cf2a0;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--text); font-family:'Inter', sans-serif; -webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Chakra Petch', sans-serif;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer;}
+
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 6%; border-bottom:1px solid var(--line);
+  }
+  .logo{font-size:1.15rem; font-weight:700;}
+  .logo span{color:var(--cyan);}
+  .close-link{font-size:0.85rem; color:var(--muted); border:1px solid var(--line); padding:8px 16px; border-radius:6px; background:none;}
+
+  .wizard{max-width:640px; margin:0 auto; padding:60px 6% 100px;}
+
+  /* progress */
+  .progress{display:flex; align-items:center; gap:8px; margin-bottom:50px;}
+  .progress .seg{flex:1; height:3px; background:var(--line); border-radius:2px; overflow:hidden;}
+  .progress .seg .fill{height:100%; background:var(--cyan); width:0%; transition:width .4s;}
+  .progress .step-count{font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--muted); white-space:nowrap;}
+
+  .step{display:none;}
+  .step.active{display:block; animation:fadeIn .35s ease;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+  .q-eyebrow{font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--green); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:14px;}
+  .step h2{font-size:1.7rem; margin-bottom:10px;}
+  .step .hint{color:var(--muted); font-size:0.95rem; margin-bottom:36px;}
+
+  .option-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:40px;}
+  .option{
+    background:var(--surface); border:1px solid var(--line); border-radius:12px;
+    padding:22px; text-align:left; color:var(--text);
+  }
+  .option:hover{border-color:var(--cyan);}
+  .option.selected{border-color:var(--cyan); background:var(--surface-2); box-shadow:0 0 0 1px var(--cyan) inset;}
+  .option .icon{font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--violet); margin-bottom:10px; display:block;}
+  .option .title{font-weight:600; margin-bottom:4px; font-size:1.02rem;}
+  .option .desc{font-size:0.82rem; color:var(--muted);}
+
+  .budget-options{display:flex; flex-direction:column; gap:12px; margin-bottom:40px;}
+  .budget-option{
+    background:var(--surface); border:1px solid var(--line); border-radius:10px;
+    padding:18px 22px; display:flex; justify-content:space-between; align-items:center; color:var(--text);
+  }
+  .budget-option:hover{border-color:var(--cyan);}
+  .budget-option.selected{border-color:var(--cyan); background:var(--surface-2);}
+  .budget-option .range{font-family:'JetBrains Mono',monospace; color:var(--muted); font-size:0.85rem;}
+
+  .priority-list{display:flex; flex-direction:column; gap:10px; margin-bottom:40px;}
+  .priority-item{
+    display:flex; align-items:center; gap:14px; background:var(--surface); border:1px solid var(--line);
+    border-radius:10px; padding:16px 20px;
+  }
+  .priority-item input{accent-color:var(--cyan); width:16px; height:16px;}
+  .priority-item .label{font-size:0.95rem;}
+  .priority-item .sub{font-size:0.78rem; color:var(--muted); margin-left:auto; font-family:'JetBrains Mono',monospace;}
+
+  .wizard-nav{display:flex; justify-content:space-between; align-items:center;}
+  .btn-back{color:var(--muted); font-size:0.9rem; background:none; border:none;}
+  .btn-next{
+    background:var(--cyan); color:#04121a; font-weight:600; padding:14px 28px;
+    border-radius:8px; font-size:0.95rem; border:none;
+  }
+  .btn-next:disabled{opacity:0.4; cursor:not-allowed;}
+
+  /* RESULTS */
+  .results-eyebrow{font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--green); margin-bottom:14px;}
+  .results h2{font-size:1.8rem; margin-bottom:8px;}
+  .results .hint{color:var(--muted); margin-bottom:36px;}
+
+  .result-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:14px;
+    padding:24px; margin-bottom:16px; display:flex; gap:20px; align-items:center;
+  }
+  .result-card.best{border-color:var(--cyan);}
+  .rank{
+    font-family:'Chakra Petch'; font-weight:700; font-size:1.6rem; color:var(--line);
+    width:36px; flex-shrink:0;
+  }
+  .result-card.best .rank{color:var(--cyan);}
+  .result-info{flex:1;}
+  .result-info .name{font-weight:600; font-size:1.05rem; margin-bottom:4px;}
+  .result-info .why{font-size:0.82rem; color:var(--muted);}
+  .result-score{text-align:right; flex-shrink:0; width:130px;}
+  .result-score .pct{font-family:'JetBrains Mono',monospace; color:var(--cyan); font-size:1.1rem; margin-bottom:6px;}
+  .bar-bg{height:6px; background:var(--surface-2); border-radius:4px; overflow:hidden;}
+  .bar-fill{height:100%; background:linear-gradient(90deg, var(--cyan), var(--violet));}
+  .result-price{font-family:'JetBrains Mono',monospace; font-size:0.85rem; color:var(--muted); width:110px; text-align:right; flex-shrink:0;}
+  .result-cta{
+    background:var(--surface-2); border:1px solid var(--line); padding:10px 16px;
+    border-radius:6px; font-size:0.82rem; flex-shrink:0;
+  }
+  .result-cta:hover{border-color:var(--cyan); color:var(--cyan);}
+
+  .restart{text-align:center; margin-top:30px;}
+  .restart button{background:none; border:1px solid var(--line); color:var(--muted); padding:10px 20px; border-radius:6px; font-size:0.85rem;}
+
+  @media(max-width:700px){
+    .option-grid{grid-template-columns:1fr;}
+    .result-card{flex-wrap:wrap;}
+    .result-price{order:5; width:auto;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">PC<span>Store</span></div>
+  <button class="close-link">Fermer ✕</button>
+</header>
+
+<div class="wizard">
+
+  <div class="progress" id="progressBar">
+    <div class="seg"><div class="fill" id="fill1"></div></div>
+    <div class="seg"><div class="fill" id="fill2"></div></div>
+    <div class="seg"><div class="fill" id="fill3"></div></div>
+    <div class="step-count" id="stepCount">Étape 1/3</div>
+  </div>
+
+  <!-- STEP 1: usage -->
+  <div class="step active" id="step1">
+    <div class="q-eyebrow">Question 1</div>
+    <h2>Tu veux faire quoi avec, principalement ?</h2>
+    <p class="hint">Choisis l'usage qui revient le plus souvent — on affinera après.</p>
+    <div class="option-grid">
+      <button class="option" data-group="usage">
+        <span class="icon">01</span>
+        <div class="title">Gaming</div>
+        <div class="desc">Jeux récents, bonnes performances</div>
+      </button>
+      <button class="option" data-group="usage">
+        <span class="icon">02</span>
+        <div class="title">Montage vidéo / design</div>
+        <div class="desc">Premiere, Photoshop, rendu</div>
+      </button>
+      <button class="option" data-group="usage">
+        <span class="icon">03</span>
+        <div class="title">Cours / bureautique</div>
+        <div class="desc">Word, navigation, cours en ligne</div>
+      </button>
+      <button class="option" data-group="usage">
+        <span class="icon">04</span>
+        <div class="title">Développement</div>
+        <div class="desc">Code, machines virtuelles, IDE</div>
+      </button>
+    </div>
+    <div class="wizard-nav">
+      <span></span>
+      <button class="btn-next" id="next1" disabled onclick="goTo(2)">Continuer →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: budget -->
+  <div class="step" id="step2">
+    <div class="q-eyebrow">Question 2</div>
+    <h2>Ton budget approximatif ?</h2>
+    <p class="hint">On te montrera surtout des PC dans cette fourchette, avec quelques alternatives proches.</p>
+    <div class="budget-options">
+      <button class="budget-option" data-group="budget"><span>Petit budget</span><span class="range">&lt; 300 000 FCFA</span></button>
+      <button class="budget-option" data-group="budget"><span>Standard</span><span class="range">300 000 – 600 000 FCFA</span></button>
+      <button class="budget-option" data-group="budget"><span>Confort</span><span class="range">600 000 – 1 000 000 FCFA</span></button>
+      <button class="budget-option" data-group="budget"><span>Sans limite</span><span class="range">1 000 000+ FCFA</span></button>
+    </div>
+    <div class="wizard-nav">
+      <button class="btn-back" onclick="goTo(1)">← Retour</button>
+      <button class="btn-next" id="next2" disabled onclick="goTo(3)">Continuer →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: priorities -->
+  <div class="step" id="step3">
+    <div class="q-eyebrow">Question 3</div>
+    <h2>Qu'est-ce qui compte le plus pour toi ?</h2>
+    <p class="hint">Coche jusqu'à deux priorités.</p>
+    <div class="priority-list">
+      <label class="priority-item"><input type="checkbox"><span class="label">Autonomie de la batterie</span><span class="sub">mobilité</span></label>
+      <label class="priority-item"><input type="checkbox"><span class="label">Puissance brute</span><span class="sub">performance</span></label>
+      <label class="priority-item"><input type="checkbox"><span class="label">Écran & confort visuel</span><span class="sub">affichage</span></label>
+      <label class="priority-item"><input type="checkbox"><span class="label">Poids & portabilité</span><span class="sub">format</span></label>
+    </div>
+    <div class="wizard-nav">
+      <button class="btn-back" onclick="goTo(2)">← Retour</button>
+      <button class="btn-next" onclick="goTo(4)">Voir mes résultats →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: results -->
+  <div class="step" id="step4">
+    <div class="results-eyebrow mono">✓ ANALYSE TERMINÉE</div>
+    <h2 class="results">3 PC correspondent à ton profil</h2>
+    <p class="hint">Classés selon ce que tu as répondu — montage vidéo, budget confort, puissance en priorité.</p>
+
+    <div class="result-card best">
+      <div class="rank">01</div>
+      <div class="result-info">
+        <div class="name">Studio Pro X</div>
+        <div class="why">RTX 4070 + 32 Go — largement au-dessus du besoin pour du montage fluide</div>
+      </div>
+      <div class="result-score">
+        <div class="pct">94% match</div>
+        <div class="bar-bg"><div class="bar-fill" style="width:94%"></div></div>
+      </div>
+      <div class="result-price">1 150 000 F</div>
+      <a class="result-cta" href="#">Voir</a>
+    </div>
+
+    <div class="result-card">
+      <div class="rank">02</div>
+      <div class="result-info">
+        <div class="name">Aster RX-15</div>
+        <div class="why">RTX 4060 correcte pour du montage léger, un cran en dessous du Studio Pro X</div>
+      </div>
+      <div class="result-score">
+        <div class="pct">78% match</div>
+        <div class="bar-bg"><div class="bar-fill" style="width:78%"></div></div>
+      </div>
+      <div class="result-price">720 000 F</div>
+      <a class="result-cta" href="#">Voir</a>
+    </div>
+
+    <div class="result-card">
+      <div class="rank">03</div>
+      <div class="result-info">
+        <div class="name">Nova Slim 14</div>
+        <div class="why">GPU intégré seulement — fonctionnera mais avec des exports plus lents</div>
+      </div>
+      <div class="result-score">
+        <div class="pct">41% match</div>
+        <div class="bar-bg"><div class="bar-fill" style="width:41%"></div></div>
+      </div>
+      <div class="result-price">265 000 F</div>
+      <a class="result-cta" href="#">Voir</a>
+    </div>
+
+    <div class="restart">
+      <button onclick="goTo(1)">Refaire le questionnaire</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const totalSteps = 3;
+  function updateProgress(step){
+    for(let i=1;i<=totalSteps;i++){
+      const fill = document.getElementById('fill'+i);
+      if(fill) fill.style.width = (step > i) ? '100%' : (step === i ? '50%' : '0%');
+    }
+    const count = document.getElementById('stepCount');
+    if(step <= totalSteps){ count.textContent = 'Étape '+step+'/3'; }
+    else { count.textContent = 'Résultat'; for(let i=1;i<=totalSteps;i++){document.getElementById('fill'+i).style.width='100%';} }
+  }
+  function goTo(step){
+    document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+    document.getElementById('step'+step).classList.add('active');
+    updateProgress(step);
+    if(step===1){
+      document.querySelectorAll('.option.selected').forEach(o=>o.classList.remove('selected'));
+      document.getElementById('next1').disabled = true;
+    }
+  }
+  document.querySelectorAll('.option[data-group="usage"]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.option[data-group="usage"]').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('next1').disabled = false;
+    });
+  });
+  document.querySelectorAll('.budget-option[data-group="budget"]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.budget-option[data-group="budget"]').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('next2').disabled = false;
+    });
+  });
+  updateProgress(1);
+</script>
+
+</body>
+</html>

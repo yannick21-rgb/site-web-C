@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCStore — Trouve le PC qu'il te faut</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0e14;
+    --bg-alt: #0e131b;
+    --surface: #121824;
+    --surface-2: #171f2e;
+    --line: #232d3f;
+    --text: #e7ecf3;
+    --muted: #7d8aa0;
+    --cyan: #4fe3ff;
+    --violet: #9a7bff;
+    --green: #5cf2a0;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{font-family:'Chakra Petch', sans-serif;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+  a{color:inherit; text-decoration:none;}
+
+  /* background circuit texture */
+  .grid-bg{
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
+    position:absolute; inset:0; opacity:0.5; pointer-events:none;
+  }
+
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 6%; border-bottom:1px solid var(--line);
+    position:relative; z-index:5;
+  }
+  .logo{font-size:1.15rem; font-weight:700; letter-spacing:0.5px;}
+  .logo span{color:var(--cyan);}
+  nav{display:flex; gap:32px; font-size:0.92rem; color:var(--muted);}
+  nav a:hover{color:var(--text);}
+  .cta-header{
+    background:var(--cyan); color:#04121a; font-weight:600; font-size:0.88rem;
+    padding:9px 18px; border-radius:6px;
+  }
+
+  /* HERO */
+  .hero{position:relative; overflow:hidden; padding:110px 6% 100px; border-bottom:1px solid var(--line);}
+  .hero-inner{position:relative; z-index:2; max-width:640px;}
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace; font-size:0.78rem; color:var(--green);
+    letter-spacing:2px; text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:8px;
+  }
+  .eyebrow::before{content:''; width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green);}
+  .hero h1{
+    font-size:3.1rem; line-height:1.08; font-weight:700; margin-bottom:22px;
+    background:linear-gradient(100deg, #fff 30%, var(--cyan) 75%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero p{color:var(--muted); font-size:1.05rem; line-height:1.6; margin-bottom:34px; max-width:480px;}
+  .hero-actions{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--cyan); color:#04121a; font-weight:600; padding:14px 26px;
+    border-radius:7px; font-size:0.95rem;
+  }
+  .btn-secondary{
+    border:1px solid var(--line); color:var(--text); padding:14px 26px;
+    border-radius:7px; font-size:0.95rem;
+  }
+  .btn-secondary:hover{border-color:var(--violet);}
+
+  /* signature: boot terminal panel */
+  .terminal{
+    position:absolute; right:6%; top:100px; width:380px;
+    background:var(--surface); border:1px solid var(--line); border-radius:10px;
+    box-shadow:0 0 60px rgba(79,227,255,0.08);
+    z-index:2;
+  }
+  .terminal-bar{
+    display:flex; gap:6px; padding:12px 16px; border-bottom:1px solid var(--line);
+  }
+  .dot{width:9px; height:9px; border-radius:50%;}
+  .dot.r{background:#ff5f57;} .dot.y{background:#febc2e;} .dot.g{background:#28c840;}
+  .terminal-body{padding:18px 20px; font-family:'JetBrains Mono', monospace; font-size:0.82rem; line-height:1.9;}
+  .terminal-body .ok{color:var(--green);}
+  .terminal-body .label{color:var(--muted);}
+  .terminal-body .val{color:var(--cyan);}
+  .cursor{display:inline-block; width:7px; height:14px; background:var(--cyan); animation:blink 1s steps(1) infinite; vertical-align:middle;}
+  @keyframes blink{50%{opacity:0;}}
+
+  /* CATALOGUE */
+  section{padding:90px 6%;}
+  .section-head{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:44px; flex-wrap:wrap; gap:16px;}
+  .section-head h2{font-size:1.9rem; font-weight:600;}
+  .section-head p{color:var(--muted); max-width:420px; font-size:0.95rem;}
+
+  .grid-cards{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:12px;
+    padding:26px; transition:border-color .2s;
+  }
+  .card:hover{border-color:var(--cyan);}
+  .card-tag{
+    display:inline-block; font-family:'JetBrains Mono',monospace; font-size:0.7rem;
+    color:var(--violet); border:1px solid var(--violet); padding:3px 9px; border-radius:20px; margin-bottom:16px;
+  }
+  .card h3{font-size:1.15rem; margin-bottom:14px;}
+  .spec-row{
+    display:flex; justify-content:space-between; font-size:0.82rem; padding:7px 0;
+    border-bottom:1px solid var(--line); font-family:'JetBrains Mono', monospace;
+  }
+  .spec-row .k{color:var(--muted);}
+  .spec-row .v{color:var(--text);}
+  .card-footer{display:flex; justify-content:space-between; align-items:center; margin-top:20px;}
+  .price{font-size:1.25rem; font-weight:700; font-family:'Chakra Petch',sans-serif;}
+  .price span{font-size:0.8rem; color:var(--muted); font-weight:400;}
+  .btn-card{
+    background:var(--surface-2); border:1px solid var(--line); padding:9px 16px;
+    border-radius:6px; font-size:0.82rem;
+  }
+  .btn-card:hover{border-color:var(--cyan); color:var(--cyan);}
+
+  /* RECOMMENDATION */
+  .reco{
+    background:var(--bg-alt); border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;
+  }
+  .reco h2{font-size:2rem; margin-bottom:18px;}
+  .reco p{color:var(--muted); margin-bottom:28px; line-height:1.6;}
+  .reco-tags{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:30px;}
+  .reco-tags span{
+    font-family:'JetBrains Mono',monospace; font-size:0.78rem; padding:7px 13px;
+    border:1px solid var(--line); border-radius:20px; color:var(--muted);
+  }
+  .reco-visual{
+    background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:28px;
+  }
+  .match-row{margin-bottom:18px;}
+  .match-label{display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:7px;}
+  .match-label .name{color:var(--text);}
+  .match-label .pct{font-family:'JetBrains Mono',monospace; color:var(--cyan);}
+  .bar-bg{height:7px; background:var(--surface-2); border-radius:4px; overflow:hidden;}
+  .bar-fill{height:100%; border-radius:4px; background:linear-gradient(90deg, var(--cyan), var(--violet));}
+
+  footer{padding:44px 6%; border-top:1px solid var(--line); display:flex; justify-content:space-between; color:var(--muted); font-size:0.85rem; flex-wrap:wrap; gap:12px;}
+
+  @media(max-width:900px){
+    .terminal{display:none;}
+    .grid-cards{grid-template-columns:1fr;}
+    .reco{grid-template-columns:1fr; padding:60px 6%;}
+    .hero h1{font-size:2.2rem;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">PC<span>Store</span></div>
+  <nav>
+    <a href="#">Catalogue</a>
+    <a href="#">Trouver mon PC</a>
+    <a href="#">Mes réservations</a>
+    <a href="#">Contact</a>
+  </nav>
+  <a class="cta-header" href="#">Réserver</a>
+</header>
+
+<div class="hero">
+  <div class="grid-bg"></div>
+  <div class="hero-inner">
+    <div class="eyebrow">Stock disponible à Cotonou</div>
+    <h1>Le bon PC, pas<br>le PC par défaut.</h1>
+    <p>Dis-nous ce que tu veux faire — gaming, montage, cours, business — et on te montre les machines qui tiennent vraiment la route pour ça.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#">Trouver mon PC →</a>
+      <a class="btn-secondary" href="#">Voir le catalogue</a>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="terminal-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+    <div class="terminal-body">
+      <div><span class="ok">✓</span> analyse du besoin...</div>
+      <div><span class="label">usage</span> &nbsp;<span class="val">montage vidéo</span></div>
+      <div><span class="label">budget</span> &nbsp;<span class="val">400 000 - 600 000 F</span></div>
+      <div><span class="label">ram_min</span> &nbsp;<span class="val">16 Go</span></div>
+      <div><span class="ok">✓</span> 3 machines compatibles trouvées<span class="cursor"></span></div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="section-head">
+    <div>
+      <h2>Le catalogue</h2>
+      <p>Une sélection de machines vérifiées, avec les vraies caractéristiques — pas de fiche vague.</p>
+    </div>
+    <a class="btn-secondary" href="#">Tout voir</a>
+  </div>
+  <div class="grid-cards">
+    <div class="card">
+      <span class="card-tag">GAMING</span>
+      <h3>Aster RX-15</h3>
+      <div class="spec-row"><span class="k">CPU</span><span class="v">Ryzen 7 7735H</span></div>
+      <div class="spec-row"><span class="k">GPU</span><span class="v">RTX 4060</span></div>
+      <div class="spec-row"><span class="k">RAM</span><span class="v">16 Go DDR5</span></div>
+      <div class="spec-row"><span class="k">Stockage</span><span class="v">512 Go SSD</span></div>
+      <div class="card-footer">
+        <div class="price">720 000 <span>FCFA</span></div>
+        <a class="btn-card" href="#">Réserver</a>
+      </div>
+    </div>
+    <div class="card">
+      <span class="card-tag">BUREAUTIQUE</span>
+      <h3>Nova Slim 14</h3>
+      <div class="spec-row"><span class="k">CPU</span><span class="v">Core i5-1235U</span></div>
+      <div class="spec-row"><span class="k">GPU</span><span class="v">Intel Iris Xe</span></div>
+      <div class="spec-row"><span class="k">RAM</span><span class="v">8 Go DDR4</span></div>
+      <div class="spec-row"><span class="k">Stockage</span><span class="v">256 Go SSD</span></div>
+      <div class="card-footer">
+        <div class="price">265 000 <span>FCFA</span></div>
+        <a class="btn-card" href="#">Réserver</a>
+      </div>
+    </div>
+    <div class="card">
+      <span class="card-tag">CRÉATION</span>
+      <h3>Studio Pro X</h3>
+      <div class="spec-row"><span class="k">CPU</span><span class="v">Ryzen 9 7940HS</span></div>
+      <div class="spec-row"><span class="k">GPU</span><span class="v">RTX 4070</span></div>
+      <div class="spec-row"><span class="k">RAM</span><span class="v">32 Go DDR5</span></div>
+      <div class="spec-row"><span class="k">Stockage</span><span class="v">1 To SSD</span></div>
+      <div class="card-footer">
+        <div class="price">1 150 000 <span>FCFA</span></div>
+        <a class="btn-card" href="#">Réserver</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="reco">
+  <div>
+    <h2>Pas sûr de ce qu'il te faut ?</h2>
+    <p>Réponds à quelques questions sur ce que tu veux faire avec ton PC — montage, jeux, cours, dev — et on classe le catalogue selon ce qui te correspond vraiment, pas selon ce qui se vend le plus.</p>
+    <div class="reco-tags">
+      <span>Gaming</span><span>Montage vidéo</span><span>Bureautique</span><span>Développement</span><span>Design</span>
+    </div>
+    <a class="btn-primary" href="#">Commencer le questionnaire →</a>
+  </div>
+  <div class="reco-visual">
+    <div class="match-row">
+      <div class="match-label"><span class="name">Studio Pro X</span><span class="pct">94%</span></div>
+      <div class="bar-bg"><div class="bar-fill" style="width:94%"></div></div>
+    </div>
+    <div class="match-row">
+      <div class="match-label"><span class="name">Aster RX-15</span><span class="pct">78%</span></div>
+      <div class="bar-bg"><div class="bar-fill" style="width:78%"></div></div>
+    </div>
+    <div class="match-row">
+      <div class="match-label"><span class="name">Nova Slim 14</span><span class="pct">41%</span></div>
+      <div class="bar-bg"><div class="bar-fill" style="width:41%"></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>© 2026 PCStore — Cotonou, Bénin</div>
+  <div>Catalogue · Réservations · Contact</div>
+</footer>
+
+</body>
+</html>

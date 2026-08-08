@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catalogue — PCStore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0e14;
+    --bg-alt: #0e131b;
+    --surface: #121824;
+    --surface-2: #171f2e;
+    --line: #232d3f;
+    --text: #e7ecf3;
+    --muted: #7d8aa0;
+    --cyan: #4fe3ff;
+    --violet: #9a7bff;
+    --green: #5cf2a0;
+    --amber: #ffb454;
+    --red: #ff6b6b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--text); font-family:'Inter', sans-serif; -webkit-font-smoothing:antialiased;}
+  h1,h2,h3,.display{font-family:'Chakra Petch', sans-serif;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+  a{color:inherit; text-decoration:none;}
+
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 6%; border-bottom:1px solid var(--line);
+  }
+  .logo{font-size:1.15rem; font-weight:700;}
+  .logo span{color:var(--cyan);}
+  nav{display:flex; gap:32px; font-size:0.92rem; color:var(--muted);}
+  nav a:hover{color:var(--text);}
+  .cta-header{background:var(--cyan); color:#04121a; font-weight:600; font-size:0.88rem; padding:9px 18px; border-radius:6px;}
+
+  /* toolbars */
+  .toolbar{padding:40px 6% 0;}
+  .toolbar h1{font-size:2rem; margin-bottom:6px;}
+  .toolbar .sub{color:var(--muted); font-size:0.95rem; margin-bottom:26px;}
+  .filters{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;}
+  .cat-filters{display:flex; gap:8px; flex-wrap:wrap;}
+  .chip{
+    font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--muted);
+    border:1px solid var(--line); background:none; padding:8px 16px; border-radius:20px; cursor:pointer;
+  }
+  .chip:hover{color:var(--text); border-color:var(--cyan);}
+  .chip.active{color:var(--cyan); border-color:var(--cyan);}
+  .price-filters{display:flex; gap:8px; flex-wrap:wrap;}
+  .select{
+    background:var(--surface); border:1px solid var(--line); color:var(--text);
+    padding:9px 14px; border-radius:8px; font-family:'JetBrains Mono',monospace; font-size:0.78rem;
+  }
+  .count-line{
+    padding:28px 6% 0; font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--muted);
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .count-line .reset{color:var(--cyan); background:none; border:none; font-family:'JetBrains Mono',monospace; font-size:0.78rem; cursor:pointer;}
+
+  /* grid */
+  section{padding:24px 6% 90px;}
+  .grid-cards{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:12px;
+    padding:26px; transition:border-color .2s;
+  }
+  .card:hover{border-color:var(--cyan);}
+  .card-top{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;}
+  .card-tag{
+    font-family:'JetBrains Mono',monospace; font-size:0.7rem;
+    color:var(--violet); border:1px solid var(--violet); padding:3px 9px; border-radius:20px;
+  }
+  .stock-dot{font-family:'JetBrains Mono',monospace; font-size:0.7rem; padding:3px 9px; border-radius:20px; display:inline-block;}
+  .stock-dot.ok{color:var(--green); background:rgba(92,242,160,0.1);}
+  .stock-dot.low{color:var(--amber); background:rgba(255,180,84,0.1);}
+  .stock-dot.out{color:var(--red); background:rgba(255,107,107,0.1);}
+  .card h3{font-size:1.15rem; margin-bottom:14px;}
+  .spec-row{
+    display:flex; justify-content:space-between; font-size:0.82rem; padding:7px 0;
+    border-bottom:1px solid var(--line); font-family:'JetBrains Mono', monospace;
+  }
+  .spec-row .k{color:var(--muted);}
+  .card-footer{display:flex; justify-content:space-between; align-items:center; margin-top:20px;}
+  .price{font-size:1.25rem; font-weight:700; font-family:'Chakra Petch',sans-serif;}
+  .price span{font-size:0.8rem; color:var(--muted); font-weight:400;}
+  .btn-card{
+    background:var(--surface-2); border:1px solid var(--line); padding:9px 16px;
+    border-radius:6px; font-size:0.82rem;
+  }
+  .btn-card:hover{border-color:var(--cyan); color:var(--cyan);}
+
+  .empty{text-align:center; padding:80px 0; color:var(--muted);}
+  .empty .big{font-family:'JetBrains Mono',monospace; color:var(--cyan);}
+  .empty p{margin:12px 0 24px;}
+  .btn-primary{
+    background:var(--cyan); color:#04121a; font-weight:600; padding:12px 22px;
+    border-radius:7px; font-size:0.9rem; border:none; cursor:pointer;
+  }
+
+  footer{padding:44px 6%; border-top:1px solid var(--line); display:flex; justify-content:space-between; color:var(--muted); font-size:0.85rem; flex-wrap:wrap; gap:12px;}
+
+  @media(max-width:900px){
+    .grid-cards{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">PC<span>Store</span></div>
+  <nav>
+    <a href="#">Catalogue</a>
+    <a href="#">Trouver mon PC</a>
+    <a href="#">Mes réservations</a>
+    <a href="#">Contact</a>
+  </nav>
+  <a class="cta-header" href="#">Réserver</a>
+</header>
+
+<div class="toolbar">
+  <h1>Le catalogue</h1>
+  <p class="sub">Toutes les machines disponibles à Cotonou, avec les vraies caractéristiques.</p>
+  <div class="filters">
+    <div class="cat-filters">
+      <button class="chip active" data-cat="all">Tout</button>
+      <button class="chip" data-cat="gaming">Gaming</button>
+      <button class="chip" data-cat="bureautique">Bureautique</button>
+      <button class="chip" data-cat="creation">Création</button>
+      <button class="chip" data-cat="developpement">Développement</button>
+    </div>
+    <div class="price-filters">
+      <select class="select" id="priceFilter">
+        <option value="all">Tout budget</option>
+        <option value="low">&lt; 300 000 F</option>
+        <option value="mid">300 000 – 600 000 F</option>
+        <option value="high">600 000 – 1 000 000 F</option>
+        <option value="top">1 000 000+ F</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="count-line">
+  <span id="resultCount">6 machines</span>
+  <button class="reset" id="resetBtn">Réinitialiser les filtres</button>
+</div>
+
+<section>
+  <div class="grid-cards" id="grid">
+
+    <div class="card" data-cat="creation" data-price="1150000">
+      <div class="card-top">
+        <span class="card-tag">CRÉATION</span>
+        <span class="stock-dot ok">3 en stock</span>
+      </div>
+      <h3>Studio Pro X</h3>
+      <div class="spec-row"><span class="k">CPU</span><span class="v">Ryzen 9 7940HS</span></div>
+      <div class="spec-row"><span class="k">GPU</span><span class="v">RTX 4070</span></div>
+      <div class="spec-row"><span class="k">RAM</span><span class="v">32 Go DDR5</span></div>
+      <div class="spec-row"><span class="k">Stockage</span><span class="v">1 To SSD</span></div>
+      <div class="card-footer">
+        <div class="price">1 150 000 <span>FCFA</span></div>
+        <a class="btn-card" href="#">Réserver</a>
+      </div>
+    </div>
+
+    <div class="card" data-cat="gaming" data-price="720000">
+      <div class="card-top">
+        <span class="card-tag">GAMING</span>
+        <span class="stock-dot low">1 en stock</span>
+      </div>
+      <h3>Aster RX-15</h3>
+      <div class="spec-row"><span class="k">CPU</span><span class="v">Ryzen 7 7735H</span></div>
+      <div class="spec-row"><span class="k">GPU</span><span class="v">RTX 4060</span></div>
+      <div class="spec-row"><span class="k">RAM</span><span class="v">16 Go DDR5</span></div>
+      <div class="spec-row"><span class="k">Stockage</span><span class="v">512 Go SSD</span></div>
+      <div class="card-footer">
+        <div class="price">720 000 <span>FCFA</span></div>
+        <a class="btn-card" href="#">Réserver</a>
+      </div>
+    </div>
+
+    <div class="card" data-cat="bureautique" data-price="265000">
+      <div class="card-top">
+        <span class="card-tag">BUREAUTIQUE</span>
+        <span class="stock-dot ok">7 en stock</span>
+      </div>
+      <h3>Nova Slim 14</h3>
+      <div class="spec-row"><span class="k">CPU</span><span class="v">Core i5-1235U</span></div>
+      <div class="spec-row"><span class="k">GPU</span><span class="v">Intel Iris Xe</span></div>
+      <div class="spec-row"><span class="k">RAM</span><span class="v">8 Go DDR4</span></div>
+      <div class="spec-row"><span class="k">Stockage</span><span class="v">256 Go SSD</span></div>
+      <div class="card-footer">
+        <div class="price">265 000 <span>FCFA</span></div>
+        <a class="btn-card" href="#">Réserver</a>
+      </div>
+    </div>
+
+    <div class="card" data-cat="developpement" data-price="480000">
+      <div class="card-top">
+        <span class="card-tag">DÉVELOPPEMENT</span>
+        <span class="stock-dot out">Rupture</span>
+      </div>
+      <h3>Dev Edge 13</h3>
+      <div class="spec-row"><span class="k">CPU</span><span class="v">Core i7-1360P</span></div>
+      <div class="spec-row"><span class="k">GPU</span><span class="v">Intel Iris Xe</span></div>
+      <div class="spec-row"><span class="k">RAM</span><span class="v">16 Go DDR4</span></div>
+      <div class="spec-row"><span class="k">Stockage</span><span class="v">512 Go SSD</span></div>
+      <div class="card-footer">
+        <div class="price">480 000 <span>FCFA</span></div>
+        <a class="btn-card" href="#">Réserver</a>
+      </div>
+    </div>
+
+    <div class="card" data-cat="bureautique" data-price="199000">
+      <div class="card-top">
+        <span class="card-tag">BUREAUTIQUE</span>
+        <span class="stock-dot ok">5 en stock</span>
+      </div>
+      <h3>Eco Lite 15</h3>
+      <div class="spec-row"><span class="k">CPU</span><span class="v">Ryzen 3 7320U</span></div>
+      <div class="spec-row"><span class="k">GPU</span><span class="v">AMD Radeon</span></div>
+      <div class="spec-row"><span class="k">RAM</span><span class="v">8 Go DDR4</span></div>
+      <div class="spec-row"><span class="k">Stockage</span><span class="v">256 Go SSD</span></div>
+      <div class="card-footer">
+        <div class="price">199 000 <span>FCFA</span></div>
+        <a class="btn-card" href="#">Réserver</a>
+      </div>
+    </div>
+
+    <div class="card" data-cat="creation" data-price="890000">
+      <div class="card-top">
+        <span class="card-tag">CRÉATION</span>
+        <span class="stock-dot low">2 en stock</span>
+      </div>
+      <h3>Pixel Grid 16</h3>
+      <div class="spec-row"><span class="k">CPU</span><span class="v">Ryzen 7 7840H</span></div>
+      <div class="spec-row"><span class="k">GPU</span><span class="v">RTX 4060</span></div>
+      <div class="spec-row"><span class="k">RAM</span><span class="v">32 Go DDR5</span></div>
+      <div class="spec-row"><span class="k">Stockage</span><span class="v">1 To SSD</span></div>
+      <div class="card-footer">
+        <div class="price">890 000 <span>FCFA</span></div>
+        <a class="btn-card" href="#">Réserver</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="empty" id="empty" style="display:none;">
+    <div class="big">AUCUN RÉSULTAT</div>
+    <p>Aucune machine ne correspond aux filtres sélectionnés.</p>
+    <button class="btn-primary" id="emptyReset">Réinitialiser les filtres</button>
+  </div>
+</section>
+
+<footer>
+  <div>© 2026 PCStore — Cotonou, Bénin</div>
+  <div>Catalogue · Réservations · Contact</div>
+</footer>
+
+<script>
+  const cards = Array.from(document.querySelectorAll('.card'));
+  const chips = document.querySelectorAll('.chip');
+  const priceSel = document.getElementById('priceFilter');
+  const countEl = document.getElementById('resultCount');
+  const emptyEl = document.getElementById('empty');
+  const grid = document.getElementById('grid');
+
+  function resetGrid(){
+    document.querySelector('.chip.active').classList.remove('active');
+    document.querySelector('.chip[data-cat="all"]').classList.add('active');
+    priceSel.value = 'all';
+    applyFilters();
+  }
+  function applyFilters(){
+    const cat = document.querySelector('.chip.active').dataset.cat;
+    const price = priceSel.value;
+    let shown = cards.filter(c => {
+      const okCat = cat === 'all' || c.dataset.cat === cat;
+      const p = +c.dataset.price;
+      let okPrice = true;
+      if(price === 'low') okPrice = p < 300000;
+      else if(price === 'mid') okPrice = p >= 300000 && p <= 600000;
+      else if(price === 'high') okPrice = p > 600000 && p < 1000000;
+      else if(price === 'top') okPrice = p >= 1000000;
+      return okCat && okPrice;
+    });
+    cards.forEach(c => c.style.display = shown.includes(c) ? '' : 'none');
+    const n = shown.length;
+    countEl.textContent = n + (n > 1 ? ' machines' : ' machine');
+    emptyEl.style.display = n ? 'none' : 'block';
+    grid.style.display = n ? '' : 'none';
+  }
+  chips.forEach(ch => ch.addEventListener('click', ()=>{
+    chips.forEach(c=>c.classList.remove('active'));
+    ch.classList.add('active');
+    applyFilters();
+  }));
+  priceSel.addEventListener('change', applyFilters);
+  resetBtn.addEventListener('click', resetGrid);
+  emptyReset.addEventListener('click', resetGrid);
+</script>
+
+</body>
+</html>
