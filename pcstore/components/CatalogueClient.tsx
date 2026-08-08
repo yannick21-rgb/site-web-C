@@ -45,9 +45,11 @@ export default function CatalogueClient({ products }: { products: Product[] }) {
 
   return (
     <div className="min-h-screen">
-      <div className="px-[6%] pt-10">
-        <h1 className="text-[2rem] mb-[6px]">Le catalogue</h1>
-        <p className="text-muted text-[0.95rem] mb-[26px]">
+      <div className="px-[6%] pt-14">
+        <h1 className="font-sora font-extrabold uppercase text-[2rem] sm:text-[2.4rem] mb-[8px]">
+          Le catalogue
+        </h1>
+        <p className="text-muted text-[0.98rem] mb-[30px]">
           Toutes les machines disponibles à Cotonou, avec les vraies caractéristiques.
         </p>
         <div className="flex justify-between items-center flex-wrap gap-4">
@@ -63,7 +65,7 @@ export default function CatalogueClient({ products }: { products: Product[] }) {
             ))}
           </div>
           <select
-            className="field !w-auto mono !text-[0.78rem] cursor-pointer"
+            className="field !w-auto !text-[0.85rem] cursor-pointer"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             aria-label="Filtrer par prix"
@@ -77,26 +79,31 @@ export default function CatalogueClient({ products }: { products: Product[] }) {
         </div>
       </div>
 
-      <div className="px-[6%] pt-7 mono text-[0.78rem] text-muted flex justify-between items-center">
+      <div className="px-[6%] pt-7 text-[0.8rem] font-medium text-muted flex justify-between items-center">
         <span>
           {filtered.length} {filtered.length > 1 ? "machines" : "machine"}
         </span>
-        <button className="text-cyan bg-none border-none mono text-[0.78rem] cursor-pointer" onClick={reset}>
+        <button
+          className="text-violet-deep bg-none border-none text-[0.8rem] font-medium cursor-pointer hover:underline"
+          onClick={reset}
+        >
           Réinitialiser les filtres
         </button>
       </div>
 
       <div className="px-[6%] py-6 pb-[90px]">
         {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[22px]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[26px]">
             {filtered.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>
         ) : (
-          <div className="text-center py-20 text-muted">
-            <div className="mono text-cyan mb-3">AUCUN RÉSULTAT</div>
-            <p className="mb-6">Aucune machine ne correspond aux filtres sélectionnés.</p>
+          <div className="text-center py-20">
+            <div className="font-sora font-bold text-violet-deep mb-3 uppercase tracking-wide">
+              Aucun résultat
+            </div>
+            <p className="text-muted mb-6">Aucune machine ne correspond aux filtres sélectionnés.</p>
             <button className="btn-primary" onClick={reset}>
               Réinitialiser les filtres
             </button>

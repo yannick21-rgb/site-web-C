@@ -44,19 +44,19 @@ export default function ProductsTable({ products }: { products: Product[] }) {
           onChange={(e) => setQ(e.target.value)}
           aria-label="Rechercher un produit"
         />
-        <Link href="/admin/produits/nouveau" className="btn-primary text-sm py-2.5 px-4">
+        <Link href="/admin/produits/nouveau" className="btn-primary text-sm py-2.5 px-6">
           + Ajouter un produit
         </Link>
       </div>
 
-      <div className="bg-surface border border-line rounded-[12px] overflow-hidden">
+      <div className="bg-white border border-line rounded-[18px] overflow-hidden shadow-[0_14px_40px_-28px_rgba(107,91,216,0.5)]">
         <table className="w-full border-collapse">
           <thead>
             <tr>
               {["Produit", "Catégorie", "Prix", "Stock", ""].map((h) => (
                 <th
                   key={h}
-                  className="text-left mono text-[0.72rem] text-muted uppercase tracking-[0.5px] px-5 py-3.5 border-b border-line bg-surface-2"
+                  className="text-left text-[0.72rem] font-semibold text-muted uppercase tracking-[0.5px] px-5 py-3.5 border-b border-line bg-surface-2"
                 >
                   {h}
                 </th>
@@ -65,26 +65,26 @@ export default function ProductsTable({ products }: { products: Product[] }) {
           </thead>
           <tbody>
             {filtered.map((p) => (
-              <tr key={p.id} className="border-b border-line last:border-b-0">
+              <tr key={p.id} className="border-b border-line last:border-b-0 hover:bg-surface-2/50">
                 <td className="px-5 py-4 text-[0.88rem]">
                   <div className="font-semibold">{p.name}</div>
-                  <div className="mono text-[0.78rem] text-muted">
+                  <div className="text-[0.78rem] text-muted font-medium">
                     {p.cpu} · {p.gpu} · {p.ram}
                   </div>
                 </td>
                 <td className="px-5 py-4 text-[0.88rem] text-muted">{CATEGORY_LABELS[p.category as Category]}</td>
-                <td className="px-5 py-4 mono text-[0.88rem]">{formatPrice(p.price)} F</td>
+                <td className="px-5 py-4 font-semibold text-[0.88rem]">{formatPrice(p.price)} F</td>
                 <td className="px-5 py-4">{stockBadge(p.stock)}</td>
                 <td className="px-5 py-4">
                   <div className="flex gap-2">
                     <Link
                       href={`/admin/produits/${p.id}/modifier`}
-                      className="bg-surface-2 border border-line rounded-md px-3 py-2 text-[0.78rem] text-muted hover:border-cyan hover:text-cyan"
+                      className="bg-white border border-line rounded-full px-4 py-2 text-[0.78rem] font-medium text-muted hover:border-violet hover:text-violet-deep transition-colors"
                     >
                       Modifier
                     </Link>
                     <button
-                      className="bg-surface-2 border border-line rounded-md px-3 py-2 text-[0.78rem] text-muted hover:border-red hover:text-red cursor-pointer"
+                      className="bg-white border border-line rounded-full px-4 py-2 text-[0.78rem] font-medium text-muted hover:border-red hover:text-red transition-colors cursor-pointer"
                       onClick={() => remove(p.id, p.name)}
                     >
                       Suppr.
@@ -95,7 +95,7 @@ export default function ProductsTable({ products }: { products: Product[] }) {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-5 py-10 text-center text-muted mono text-[0.85rem]">
+                <td colSpan={5} className="px-5 py-10 text-center text-muted text-[0.85rem]">
                   Aucun produit trouvé.
                 </td>
               </tr>

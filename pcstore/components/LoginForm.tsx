@@ -34,13 +34,14 @@ export default function LoginForm() {
     <div className="min-h-screen flex items-center justify-center px-[6%]">
       <form
         onSubmit={submit}
-        className="w-full max-w-[380px] bg-surface border border-line rounded-[12px] p-8"
+        className="w-full max-w-[400px] bg-white border border-line rounded-[28px] p-9 shadow-[0_30px_70px_-30px_rgba(107,91,216,0.5)]"
       >
-        <div className="font-chakra text-lg font-bold mb-6">
-          PC<span className="text-cyan">Store</span> <span className="text-muted mono text-xs">admin</span>
+        <div className="font-sora font-extrabold text-[1.2rem] mb-6">
+          PC<span>Store</span>{" "}
+          <span className="text-muted text-[0.72rem] font-semibold uppercase tracking-[2px]">admin</span>
         </div>
-        <h1 className="text-[1.4rem] mb-1">Connexion</h1>
-        <p className="text-muted text-[0.85rem] mb-6">Accès réservé à l&apos;équipe PCStore.</p>
+        <h1 className="font-sora font-bold text-[1.4rem] mb-1">Connexion</h1>
+        <p className="text-muted text-[0.85rem] mb-7">Accès réservé à l&apos;équipe PCStore.</p>
 
         <div className="flex flex-col gap-4">
           <input
@@ -63,9 +64,9 @@ export default function LoginForm() {
           />
         </div>
 
-        {error && <div className="mono text-[0.78rem] text-red mt-3">{error}</div>}
+        {error && <div className="text-[0.82rem] font-medium text-red mt-3">{error}</div>}
 
-        <button type="submit" className="btn-primary w-full mt-5" disabled={loading}>
+        <button type="submit" className="btn-primary w-full mt-6" disabled={loading}>
           {loading ? "Connexion..." : "Se connecter"}
         </button>
       </form>

@@ -37,20 +37,29 @@ export default async function RecommandationPage({
   return (
     <div className="min-h-screen">
       <Header />
-      <div className="max-w-[720px] mx-auto px-[6%] pt-[60px] pb-[100px]">
+      <div className="max-w-[760px] mx-auto px-[6%] pt-[50px] pb-[100px]">
         {!answers ? (
           <div>
-            <div className="mono text-[0.75rem] text-green mb-[14px]">RÉPONSES MANQUANTES</div>
-            <h2 className="text-[1.8rem] mb-[8px]">Réponds au questionnaire pour des résultats</h2>
-            <p className="text-muted mb-[36px]">Il faut un usage et un budget pour te recommander des machines.</p>
+            <div className="text-[0.75rem] font-semibold text-violet-deep tracking-[2px] uppercase mb-[14px]">
+              Réponses manquantes
+            </div>
+            <h2 className="font-sora font-bold text-[1.8rem] mb-[8px]">
+              Réponds au questionnaire pour des résultats
+            </h2>
+            <p className="text-muted mb-[36px]">
+              Il faut un usage et un budget pour te recommander des machines.
+            </p>
             <Link href="/questionnaire" className="btn-primary">
               Commencer le questionnaire →
             </Link>
           </div>
         ) : (
           <>
-            <div className="mono text-[0.75rem] text-green mb-[14px]">✓ ANALYSE TERMINÉE</div>
-            <h2 className="text-[1.8rem] mb-[8px]">
+            <div className="text-[0.75rem] font-semibold tracking-[2px] uppercase mb-[14px]">
+              <span className="w-2 h-2 rounded-full bg-[#16210a] inline-block mr-2"></span>
+              Analyse terminée
+            </div>
+            <h2 className="font-sora font-bold text-[1.8rem] mb-[8px]">
               {results!.length > 0
                 ? `${results!.length} PC correspondent à ton profil`
                 : "Aucun PC ne correspond à ton profil"}
@@ -64,32 +73,40 @@ export default async function RecommandationPage({
               {results!.map((r, i) => (
                 <div
                   key={r.product.id}
-                  className={`bg-surface border rounded-[14px] p-6 flex gap-5 items-center ${
-                    i === 0 ? "border-cyan" : "border-line"
+                  className={`bg-white border rounded-[22px] p-6 flex gap-5 items-center ${
+                    i === 0
+                      ? "border-violet-deep shadow-[0_0_0_4px_rgba(139,124,246,0.12),0_20px_44px_-24px_rgba(107,91,216,0.4)]"
+                      : "border-line shadow-[0_10px_34px_-24px_rgba(107,91,216,0.35)]"
                   }`}
                 >
-                  <div className={`font-chakra font-bold text-[1.6rem] w-9 shrink-0 ${i === 0 ? "text-cyan" : "text-line"}`}>
+                  <div
+                    className={`font-sora font-extrabold text-[1.5rem] w-10 shrink-0 ${
+                      i === 0 ? "bg-[linear-gradient(135deg,#8b7cf6,#6a5cd8)] bg-clip-text text-transparent" : "text-[#c9c4e2]"
+                    }`}
+                  >
                     {String(i + 1).padStart(2, "0")}
                   </div>
-                  <div className="flex-1">
-                    <div className="font-semibold text-[1.05rem] mb-1">{r.product.name}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-sora font-bold text-[1.05rem] mb-1">{r.product.name}</div>
                     <div className="text-[0.82rem] text-muted leading-relaxed">{r.reasons.join(" · ")}</div>
-                    <div className="mono text-[0.78rem] text-muted mt-2">
+                    <div className="font-semibold text-[0.82rem] text-violet-deep mt-2">
                       {formatPrice(r.product.price)} FCFA
                     </div>
                   </div>
                   <div className="text-right w-[130px] shrink-0">
-                    <div className="mono text-cyan text-[1.1rem] mb-1">{r.score}% match</div>
-                    <div className="h-[6px] bg-surface-2 rounded overflow-hidden">
+                    <div className="font-sora font-extrabold text-violet-deep text-[1.1rem] mb-1">
+                      {r.score}% match
+                    </div>
+                    <div className="h-[7px] bg-[#e7e3f7] rounded-full overflow-hidden">
                       <div
-                        className="h-full rounded bg-gradient-to-r from-cyan to-violet"
+                        className="h-full rounded-full bg-[linear-gradient(90deg,#8b7cf6,#6a5cd8)]"
                         style={{ width: `${r.score}%` }}
                       ></div>
                     </div>
                   </div>
                   <Link
                     href={`/produits/${r.product.id}`}
-                    className="bg-surface-2 border border-line px-4 py-2.5 rounded-md text-[0.82rem] shrink-0 hover:border-cyan hover:text-cyan transition-colors"
+                    className="bg-white border border-line px-5 py-2.5 rounded-full text-[0.82rem] font-medium shrink-0 hover:border-violet hover:text-violet-deep transition-colors"
                   >
                     Voir
                   </Link>
@@ -97,7 +114,7 @@ export default async function RecommandationPage({
               ))}
             </div>
 
-            <div className="text-center mt-[30px]">
+            <div className="text-center mt-[34px]">
               <Link href="/questionnaire" className="btn-secondary text-sm">
                 Refaire le questionnaire
               </Link>

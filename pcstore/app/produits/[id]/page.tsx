@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Gallery from "@/components/Gallery";
-import { CATEGORY_LABELS_UPPER, formatPrice, splitImages } from "@/lib/format";
+import { CATEGORY_LABELS_UPPER, formatPrice } from "@/lib/format";
 import type { Category } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -19,7 +19,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
       <span className="badge-pill stock-out">Rupture</span>
     ) : (
       <span className="badge-pill stock-ok">
-        <span className="inline-block w-[6px] h-[6px] rounded-full bg-green shadow-[0_0_6px_var(--green)] mr-1.5"></span>
+        <span className="inline-block w-[6px] h-[6px] rounded-full bg-green mr-1.5"></span>
         {stock} unité{stock > 1 ? "s" : ""} en stock
       </span>
     );
@@ -28,48 +28,51 @@ export default async function ProductPage({ params }: { params: { id: string } }
     <div className="min-h-screen">
       <Header />
 
-      <div className="px-[6%] pt-5 mono text-[0.78rem] text-muted">
-        <Link href="/catalogue" className="hover:text-cyan">
+      <div className="px-[6%] pt-5 text-[0.8rem] font-medium text-muted">
+        <Link href="/catalogue" className="hover:text-violet-deep">
           Catalogue
         </Link>{" "}
-        / {CATEGORY_LABELS_UPPER[product.category as Category]} / <span className="text-cyan">{product.name}</span>
+        / {CATEGORY_LABELS_UPPER[product.category as Category]} /{" "}
+        <span className="text-violet-deep">{product.name}</span>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-[60px] px-[6%] pt-[30px] pb-[80px] items-start">
+      <div className="grid lg:grid-cols-2 gap-[60px] px-[6%] pt-[32px] pb-[80px] items-start">
         <div>
-          <Gallery images={splitImages(product.images)} name={product.name} />
+          <Gallery images={product.images ? product.images.split("\n").filter(Boolean) : []} name={product.name} />
           <div className="flex gap-[10px] mt-5 flex-wrap">
             {stockBadge}
-            <span className="badge-pill !text-muted !bg-none border border-line">Garantie 12 mois</span>
-            <span className="badge-pill !text-muted !bg-none border border-line">Retrait à Cotonou</span>
+            <span className="badge-pill text-muted border border-line bg-white">Garantie 12 mois</span>
+            <span className="badge-pill text-muted border border-line bg-white">Retrait à Cotonou</span>
           </div>
         </div>
 
         <div>
-          <span className="card-tag mb-4">{CATEGORY_LABELS_UPPER[product.category as Category]}</span>
-          <h1 className="text-[2.3rem] mb-[10px]">{product.name}</h1>
-          <p className="text-muted text-[0.98rem] mb-[26px] leading-[1.55] max-w-[460px]">
+          <span className="card-tag mb-4 block">{CATEGORY_LABELS_UPPER[product.category as Category]}</span>
+          <h1 className="font-sora font-extrabold text-[2.3rem] uppercase tracking-tight mb-[12px]">
+            {product.name}
+          </h1>
+          <p className="text-muted text-[0.98rem] mb-[26px] leading-[1.6] max-w-[460px]">
             {product.shortDescription}
           </p>
 
           <div className="flex items-baseline gap-[10px] mb-[28px] pb-[26px] border-b border-line">
-            <span className="font-chakra text-[2rem] font-bold">{formatPrice(product.price)}</span>
-            <span className="text-muted text-[0.95rem]">FCFA</span>
+            <span className="font-sora font-extrabold text-[2rem]">{formatPrice(product.price)}</span>
+            <span className="text-muted text-[0.95rem] font-medium">FCFA</span>
           </div>
 
-          <div className="mb-[30px]">
+          <div className="bg-white border border-line rounded-[20px] p-[26px] mb-[30px]">
             {(
               [
-                ["PROCESSEUR", product.cpu],
-                ["CARTE GRAPHIQUE", product.gpu],
-                ["MÉMOIRE", product.ram],
-                ["STOCKAGE", product.storage],
-                ["ÉCRAN", product.screen],
+                ["Processeur", product.cpu],
+                ["Carte graphique", product.gpu],
+                ["Mémoire", product.ram],
+                ["Stockage", product.storage],
+                ["Écran", product.screen],
               ] as const
             ).map(([k, v]) => (
-              <div key={k} className="flex justify-between py-[13px] border-b border-line text-[0.9rem]">
-                <span className="text-muted mono text-[0.82rem]">{k}</span>
-                <span className="font-medium">{v}</span>
+              <div key={k} className="flex justify-between py-[12px] border-b border-line last:border-b-0 text-[0.9rem]">
+                <span className="text-muted text-[0.85rem]">{k}</span>
+                <span className="font-medium text-right">{v}</span>
               </div>
             ))}
           </div>
@@ -84,8 +87,8 @@ export default async function ProductPage({ params }: { params: { id: string } }
             </Link>
           </div>
 
-          <div className="bg-surface border border-line rounded-[10px] p-[16px_18px] text-[0.85rem] text-muted flex gap-3 items-start">
-            <div className="w-5 h-5 rounded-full border border-amber text-amber mono text-[0.75rem] flex items-center justify-center shrink-0">
+          <div className="bg-white border border-line rounded-[18px] p-[18px_20px] text-[0.85rem] text-muted flex gap-3 items-start leading-[1.6]">
+            <div className="w-6 h-6 rounded-full bg-violet-deep/10 text-violet-deep border border-violet-deep/25 text-[0.8rem] font-semibold flex items-center justify-center shrink-0">
               i
             </div>
             <div>
@@ -97,7 +100,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
       </div>
 
       <div className="px-[6%] pb-[90px]">
-        <h2 className="text-[1.5rem] mb-[30px]">Fiche technique complète</h2>
+        <h2 className="font-sora font-bold uppercase text-[1.5rem] mb-[30px]">Fiche technique complète</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-[22px]">
           {(
             [
@@ -128,15 +131,17 @@ export default async function ProductPage({ params }: { params: { id: string } }
               },
             ] as const
           ).map((g) => (
-            <div key={g.title} className="bg-surface border border-line rounded-[12px] p-6">
-              <div className="mono text-[0.75rem] text-cyan uppercase tracking-[1px] mb-4">{g.title}</div>
+            <div key={g.title} className="bg-white border border-line rounded-[20px] p-7">
+              <div className="font-semibold text-[0.72rem] text-violet-deep uppercase tracking-[1.5px] mb-4">
+                {g.title}
+              </div>
               {g.rows.map(([k, v]) => (
                 <div
                   key={k}
-                  className="flex justify-between py-[9px] border-b border-line text-[0.86rem] last:border-b-0"
+                  className="flex justify-between gap-3 py-[9px] border-b border-line last:border-b-0 text-[0.86rem]"
                 >
                   <span className="text-muted">{k}</span>
-                  <span className="text-right">{v}</span>
+                  <span className="text-right font-medium">{v}</span>
                 </div>
               ))}
             </div>

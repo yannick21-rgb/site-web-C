@@ -99,8 +99,8 @@ export default function ProductForm({ product }: { product?: Product }) {
 
   return (
     <form onSubmit={submit} className="max-w-[760px]">
-      <div className="bg-surface border border-line rounded-[12px] p-6 mb-4">
-        <h2 className="mono text-[0.75rem] text-cyan uppercase tracking-[1px] mb-4">
+      <div className="bg-surface border border-line rounded-[20px] p-7 mb-4">
+        <h2 className="text-[0.75rem] font-semibold text-violet-deep uppercase tracking-[1.5px] mb-4">
           {SECTIONS[0].title}
         </h2>
         <div className="grid sm:grid-cols-2 gap-4">
@@ -132,8 +132,8 @@ export default function ProductForm({ product }: { product?: Product }) {
       </div>
 
       {SECTIONS.map((s) => (
-        <div key={s.title} className="bg-surface border border-line rounded-[12px] p-6 mb-4">
-          <h2 className="mono text-[0.75rem] text-cyan uppercase tracking-[1px] mb-4">{s.title}</h2>
+        <div key={s.title} className="bg-surface border border-line rounded-[20px] p-7 mb-4">
+          <h2 className="text-[0.75rem] font-semibold text-violet-deep uppercase tracking-[1.5px] mb-4">{s.title}</h2>
           <div className="grid sm:grid-cols-2 gap-4">
             {s.fields.map((f) => (
               <div key={f.name as string}>
@@ -153,8 +153,8 @@ export default function ProductForm({ product }: { product?: Product }) {
         </div>
       ))}
 
-      <div className="bg-surface border border-line rounded-[12px] p-6 mb-4">
-        <h2 className="mono text-[0.75rem] text-cyan uppercase tracking-[1px] mb-2">Photos</h2>
+      <div className="bg-surface border border-line rounded-[20px] p-7 mb-4">
+        <h2 className="text-[0.75rem] font-semibold text-violet-deep uppercase tracking-[1.5px] mb-2">Photos</h2>
         <p className="text-muted text-[0.8rem] mb-4">
           URL d&apos;images (3 proposées par défaut, modifiables). L&apos;upload de fichiers sera
           branché sur un stockage cloud en V2.

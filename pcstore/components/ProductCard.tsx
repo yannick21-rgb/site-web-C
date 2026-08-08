@@ -9,44 +9,40 @@ export default function ProductCard({ product }: { product: Product }) {
   const stockText = stock <= 0 ? "Rupture" : `${stock} en stock`;
 
   return (
-    <div className="card p-[26px] flex flex-col">
-      <div className="flex items-center justify-between mb-4">
-        <span className="card-tag">{CATEGORY_LABELS_UPPER[product.category as Category]}</span>
-        <span className={`badge-pill ${stockClass}`}>{stockText}</span>
-      </div>
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-12 h-12 rounded-lg bg-surface-2 border border-line flex items-center justify-center font-chakra font-bold text-line text-xl shrink-0">
+    <div className="card p-[22px] flex flex-col">
+      <div className="relative aspect-[16/10] rounded-[16px] overflow-hidden bg-[linear-gradient(135deg,#e7e1ff_0%,#f4eaff_55%,#eef0fb_100%)] mb-[18px] flex items-center justify-center">
+        <div className="absolute w-[150px] h-[150px] rounded-full bg-[radial-gradient(circle,rgba(139,124,246,0.3),transparent_70%)]"></div>
+        <span className="relative font-sora font-extrabold text-[2.6rem] text-[#8b7cf6]/45 select-none">
           {initials(product.name)}
-        </div>
-        <h3 className="text-lg">{product.name}</h3>
+        </span>
+        <span className={`badge-pill absolute top-3 right-3 ${stockClass}`}>{stockText}</span>
       </div>
-      <div className="flex-1">
-        <div className="spec-row">
-          <span className="k">CPU</span>
-          <span className="text-right text-ink">{product.cpu}</span>
-        </div>
-        <div className="spec-row">
-          <span className="k">GPU</span>
-          <span className="text-right text-ink">{product.gpu}</span>
-        </div>
-        <div className="spec-row">
-          <span className="k">RAM</span>
-          <span className="text-right text-ink">{product.ram}</span>
-        </div>
-        <div className="spec-row">
-          <span className="k">Stockage</span>
-          <span className="text-right text-ink">{product.storage}</span>
-        </div>
+
+      <span className="card-tag mb-[6px]">{CATEGORY_LABELS_UPPER[product.category as Category]}</span>
+      <h3 className="font-sora font-bold text-[1.15rem] mb-[10px]">{product.name}</h3>
+
+      <div className="flex gap-x-4 gap-y-1 flex-wrap text-[0.78rem] font-medium text-muted mb-5">
+        <span>{product.cpu}</span>
+        <span>·</span>
+        <span>{product.ram}</span>
       </div>
-      <div className="flex justify-between items-center mt-5">
-        <div className="font-chakra text-xl font-bold">
-          {formatPrice(product.price)} <span className="text-sm text-muted font-normal">FCFA</span>
+
+      <div className="flex items-center justify-between mt-auto">
+        <div className="font-sora font-extrabold text-[1.25rem] leading-none">
+          {formatPrice(product.price)}
+          <span className="text-[0.72rem] font-semibold text-muted ml-1">FCFA</span>
         </div>
         <Link
           href={`/reserver?produit=${product.id}`}
-          className="bg-surface-2 border border-line px-4 py-2 rounded-md text-[0.82rem] hover:border-cyan hover:text-cyan transition-colors"
+          className={`w-11 h-11 rounded-full bg-lime text-lime-ink flex items-center justify-center shadow-[0_10px_20px_-6px_rgba(198,255,63,0.65)] transition-transform hover:scale-110 ${
+            stock <= 0 ? "pointer-events-none opacity-40 grayscale" : ""
+          }`}
+          aria-label={`Réserver le ${product.name}`}
         >
-          Réserver
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
         </Link>
       </div>
     </div>

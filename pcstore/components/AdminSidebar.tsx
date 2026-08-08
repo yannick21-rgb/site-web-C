@@ -20,31 +20,38 @@ export default function AdminSidebar({ email }: { email: string }) {
   };
 
   return (
-    <aside className="bg-surface border-r border-line p-[18px] flex flex-col gap-1 lg:min-h-screen">
-      <div className="font-chakra text-lg font-bold px-[10px] mb-8">
-        PC<span className="text-cyan">Store</span>{" "}
-        <span className="text-muted text-xs font-jetbrains font-normal">admin</span>
+    <aside className="bg-white border-r border-line p-[20px] flex flex-col gap-1 lg:min-h-screen">
+      <div className="font-sora font-extrabold text-[1.1rem] px-[12px] mb-8">
+        PC<span>Store</span>{" "}
+        <span className="text-muted text-[0.68rem] font-semibold uppercase tracking-[2px]">admin</span>
       </div>
-      <nav className="flex lg:flex-col gap-1">
+      <nav className="flex lg:flex-col gap-1.5">
         {NAV.map((n) => {
           const active = pathname === n.href || (n.href !== "/admin" && pathname.startsWith(n.href));
           return (
             <Link
               key={n.href}
               href={n.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[0.9rem] ${
-                active ? "bg-surface-2 text-ink" : "text-muted hover:bg-surface-2 hover:text-ink"
+              className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-[0.9rem] font-medium transition-colors ${
+                active
+                  ? "bg-violet-deep text-white shadow-[0_10px_24px_-12px_rgba(107,92,216,0.7)]"
+                  : "text-muted hover:bg-surface-2 hover:text-ink"
               }`}
             >
-              <span className={`w-1.5 h-1.5 rounded-full ${active ? "bg-cyan shadow-[0_0_6px_var(--cyan)]" : "bg-line"}`}></span>
+              <span
+                className={`w-2 h-2 rounded-full ${active ? "bg-lime" : "bg-[#d5d1e8]"}`}
+              ></span>
               {n.label}
             </Link>
           );
         })}
       </nav>
-      <div className="mt-auto pt-[18px] border-t border-line px-2.5 pb-3 mono text-[0.78rem] text-muted flex flex-col gap-3">
-        {email && <span className="break-all">{email}</span>}
-        <button className="text-left bg-none border-none mono text-[0.78rem] text-muted hover:text-red cursor-pointer" onClick={logout}>
+      <div className="mt-auto pt-[18px] border-t border-line px-4 pb-3 text-[0.8rem] text-muted flex flex-col gap-3">
+        {email && <span className="break-all font-medium">{email}</span>}
+        <button
+          className="text-left bg-none border-none text-[0.8rem] font-medium text-muted hover:text-red cursor-pointer"
+          onClick={logout}
+        >
           Se déconnecter
         </button>
       </div>
