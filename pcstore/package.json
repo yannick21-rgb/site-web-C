@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "predev": "tsx scripts/prepare-prisma.ts",
-    "prebuild": "tsx scripts/prepare-prisma.ts && prisma db push && tsx scripts/ensure-admin.ts",
+    "prebuild": "tsx scripts/prepare-prisma.ts && prisma db push && tsx scripts/ensure-products.ts && tsx scripts/ensure-admin.ts",
     "postinstall": "tsx scripts/prepare-prisma.ts && prisma generate",
     "db:push": "tsx scripts/prepare-prisma.ts && prisma db push",
     "db:seed": "tsx scripts/prepare-prisma.ts && prisma db seed",
