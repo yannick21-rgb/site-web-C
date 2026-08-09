@@ -6,7 +6,6 @@ import { useState } from "react";
 const NAV = [
   { href: "/catalogue", label: "Catalogue" },
   { href: "/questionnaire", label: "Trouver mon PC" },
-  { href: "/reserver", label: "Réserver" },
 ];
 
 export default function Header() {
@@ -61,6 +60,13 @@ export default function Header() {
               {n.label}
             </Link>
           ))}
+          <Link
+            href="/reserver"
+            onClick={() => setOpen(false)}
+            className="text-ink font-semibold hover:text-violet transition-colors"
+          >
+            Réserver
+          </Link>
         </div>
       )}
     </header>

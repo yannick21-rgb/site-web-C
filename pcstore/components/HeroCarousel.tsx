@@ -40,9 +40,6 @@ function HeroCard({ product, leaving }: { product: Product; leaving: boolean }) 
         <span className="relative font-sora font-extrabold text-[3.4rem] text-[#8b7cf6]/50 select-none">
           {initials(product.name)}
         </span>
-        <span className="absolute bottom-3 right-4 text-[0.65rem] font-medium uppercase tracking-[2px] text-[#6b6a78]/80">
-          {CATEGORY_LABELS_UPPER[product.category as Category]}
-        </span>
       </div>
 
       <div className="px-1 pb-1">
@@ -166,7 +163,7 @@ export default function HeroCarousel({ products }: { products: Product[] }) {
   const advanceRef = useRef<() => void>(() => {});
   advanceRef.current = () => {
     const prev = slotsRef.current;
-    if (prev.length === 0 || inStock.length === 0) return;
+    if (prev.length === 0 || inStock.length < 2) return;
     const last = prev[prev.length - 1]!;
     const curIdx = inStock.findIndex((p) => p.id === last.product.id);
     const next = inStock[(curIdx + 1) % inStock.length]!;
@@ -245,7 +242,10 @@ export default function HeroCarousel({ products }: { products: Product[] }) {
         </div>
 
         <div className="absolute -bottom-6 -left-8 z-[5] hidden sm:block">
-          <div className="bg-navy rounded-2xl px-4 py-3 text-lime shadow-[0_16px_36px_-14px_rgba(21,19,31,0.7)] animate-float border border-white/10">
+          <div
+            className="bg-navy rounded-2xl px-4 py-3 text-lime shadow-[0_16px_36px_-14px_rgba(21,19,31,0.7)] animate-float border border-white/10"
+            style={{ ["--float-delay" as string]: "1.4" }}
+          >
             <div className="text-[0.62rem] font-semibold uppercase tracking-[1.5px] text-white/60">
               Stock à Cotonou
             </div>

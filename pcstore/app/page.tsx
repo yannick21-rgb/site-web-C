@@ -48,10 +48,45 @@ const FEATURES = [
 ];
 
 const STATS = [
-  { icon: <path d="M21 8l-9-5-9 5m9-5v13m-9-2 9 5 9-5" />, value: "{models}", label: "Modèles disponibles", sub: "en stock à Cotonou" },
-  { icon: <path d="M12 6v12M6 12h12" />, value: "0 F", label: "Paiement en ligne", sub: "règlement sur place uniquement" },
-  { icon: <path d="M4 4h13l3 4v12H4V4ZM4 8h16M9 12h6" />, label: "48h", sub: "de blocage gratuit par réservation" },
-  { icon: <path d="M9 11 3 5m6 0L3 11M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5Z" />, label: "100%", sub: "de specs vérifiées avant mise en stock" },
+  {
+    icon: <path d="M4 5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm8 12v3M8 20h8" />,
+    value: "{models}",
+    label: "Modèles disponibles",
+    sub: "en stock à Cotonou",
+  },
+  {
+    icon: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3 2" />
+      </>
+    ),
+    value: "48h",
+    label: "Réservation bloquée",
+    sub: "gratuite, pour chaque PC",
+  },
+  {
+    icon: (
+      <>
+        <path d="M12 2 4 5v6c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V5l-8-3Z" />
+        <path d="m9 9 6 6M15 9l-6 6" />
+      </>
+    ),
+    value: "0 F",
+    label: "Paiement en ligne",
+    sub: "tu règles en boutique, au retrait",
+  },
+  {
+    icon: (
+      <>
+        <path d="M12 2 4 5v6c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V5l-8-3Z" />
+        <path d="m9 12 2 2 4-4" />
+      </>
+    ),
+    value: "12",
+    label: "Mois de garantie",
+    sub: "sur chaque machine",
+  },
 ];
 
 const TESTIMONIALS = [
@@ -81,14 +116,10 @@ export default async function HomePage() {
       <Header />
 
       {/* HERO */}
-      <section className="relative overflow-hidden px-[6%] pt-[40px] pb-[70px] lg:pt-[60px]">
+      <section className="relative overflow-hidden px-[6%] pt-[40px] pb-[70px] lg:pl-[calc(6%+84px)] lg:pt-[60px]">
         <div className="hero-bg"></div>
         <div className="relative z-[2] grid lg:grid-cols-[minmax(0,1fr)_auto] gap-[70px] items-center">
           <div className="max-w-[620px]">
-            <div className="mb-[22px] inline-flex items-center gap-2.5 bg-white/80 border border-line rounded-full px-4 py-2 text-[0.8rem] font-medium text-muted">
-              <span className="w-2 h-2 rounded-full bg-lime-ink bg-[#16210a] shadow-[0_0_0_4px_rgba(198,255,63,0.35)]"></span>
-              Stock disponible à Cotonou
-            </div>
             <h1 className="font-sora font-extrabold uppercase text-[2.4rem] sm:text-[3.2rem] lg:text-[3.7rem] leading-[1.05] tracking-tight mb-[26px]">
               Le bon PC,
               <br />
@@ -222,34 +253,36 @@ export default async function HomePage() {
 
       {/* TÉMOIGNAGES */}
       <section className="bg-navy text-white px-[6%] py-[64px] lg:py-[80px]">
-        <div className="grid lg:grid-cols-[1fr_1.3fr_1fr] gap-8 items-stretch">
-          {TESTIMONIALS.map((t) => (
-            <div key={t.name} className="bg-navy-2 border border-white/10 rounded-[24px] p-7 flex flex-col gap-5">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-[linear-gradient(135deg,#8b7cf6,#6a5cd8)] flex items-center justify-center font-sora font-bold">
-                  {t.name.split(" ").map((w) => w[0]).join("")}
+        <div className="flex flex-col gap-8">
+          <div className="grid md:grid-cols-3 gap-6 items-stretch">
+            {TESTIMONIALS.map((t) => (
+              <div key={t.name} className="bg-navy-2 border border-white/10 rounded-[24px] p-7 flex flex-col gap-5">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-[linear-gradient(135deg,#8b7cf6,#6a5cd8)] flex items-center justify-center font-sora font-bold">
+                    {t.name.split(" ").map((w) => w[0]).join("")}
+                  </div>
+                  <div>
+                    <div className="font-semibold text-[0.95rem]">{t.name}</div>
+                    <div className="text-white/50 text-[0.8rem]">{t.role}</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="font-semibold text-[0.95rem]">{t.name}</div>
-                  <div className="text-white/50 text-[0.8rem]">{t.role}</div>
-                </div>
+                <p className="text-white/75 text-[0.9rem] leading-[1.65]">“{t.text}”</p>
               </div>
-              <p className="text-white/75 text-[0.9rem] leading-[1.65]">“{t.text}”</p>
-            </div>
-          ))}
-          <div className="bg-white rounded-[24px] p-8 flex flex-col justify-between gap-8 lg:row-span-2 lg:order-first">
+            ))}
+          </div>
+          <div className="bg-white rounded-[24px] p-8 flex flex-wrap items-center justify-between gap-6">
             <div>
               <h2 className="font-sora font-bold uppercase text-[1.4rem] text-ink mb-3">Ça te parle ?</h2>
-              <p className="text-muted text-[0.95rem] leading-[1.6]">
+              <p className="text-muted text-[0.95rem] leading-[1.6] max-w-[440px]">
                 Réserve une machine en 2 minutes. Aucun paiement en ligne, récupération en
                 boutique à Cotonou.
               </p>
             </div>
-            <div className="flex flex-col gap-3">
-              <Link href="/reserver" className="btn-primary text-center">
+            <div className="flex gap-3 flex-wrap">
+              <Link href="/reserver" className="btn-primary">
                 Réserver un PC
               </Link>
-              <Link href="/questionnaire" className="btn-secondary text-center">
+              <Link href="/questionnaire" className="btn-secondary">
                 Trouver mon PC
               </Link>
             </div>
