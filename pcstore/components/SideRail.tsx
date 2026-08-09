@@ -25,16 +25,6 @@ const ITEMS: { href: string; label: string; icon: React.ReactNode }[] = [
     ),
   },
   {
-    href: "/catalogue",
-    label: "Catégories",
-    icon: (
-      <>
-        <path d="M4 6h16M4 12h10M4 18h7" />
-        <path d="m17 15 3 3-3 3" />
-      </>
-    ),
-  },
-  {
     href: "/admin/login",
     label: "Compte",
     icon: (
