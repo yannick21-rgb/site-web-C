@@ -16,7 +16,23 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Email et mot de passe obligatoires." }, { status: 400 });
   }
 
-  const admin = await prisma.adminUser.findUnique({ where: { email: email.toLowerCase().trim() } });
+  const loginEmail = email.toLowerCase().trim();
+
+  if (!(await prisma.adminUser.findUnique({ where: { email: loginEmail } }))) {
+    const total = await prisma.adminUser.count();
+    if (total === 0) {
+      const defaultEmail = process.env.ADMIN_CREATE_EMAIL || "admin@pcstore.bj";
+      const defaultPassword = process.env.ADMIN_CREATE_PASSWORD || "pcstore2026";
+      const passwordHash = await bcrypt.hash(defaultPassword, 10);
+      await prisma.adminUser.upsert({
+        where: { email: defaultEmail },
+        update: { passwordHash },
+        create: { email: defaultEmail, passwordHash },
+      });
+    }
+  }
+
+  const admin = await prisma.adminUser.findUnique({ where: { email: loginEmail } });
   if (!admin || !(await bcrypt.compare(password, admin.passwordHash))) {
     return NextResponse.json({ error: "Identifiants incorrects." }, { status: 401 });
   }
