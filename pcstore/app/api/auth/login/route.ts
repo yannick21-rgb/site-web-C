@@ -17,12 +17,22 @@ export async function POST(request: Request) {
   }
 
   const loginEmail = email.toLowerCase().trim();
+  const defaultEmail = (process.env.ADMIN_CREATE_EMAIL || "admin@pcstore.bj").toLowerCase().trim();
+  const defaultPassword = process.env.ADMIN_CREATE_PASSWORD || "pcstore2026";
 
-  if (!(await prisma.adminUser.findUnique({ where: { email: loginEmail } }))) {
+  const existing = await prisma.adminUser.findUnique({ where: { email: loginEmail } });
+
+  if (existing && loginEmail === defaultEmail && password === defaultPassword) {
+    const passwordHash = await bcrypt.hash(defaultPassword, 10);
+    await prisma.adminUser.update({
+      where: { email: loginEmail },
+      data: { passwordHash },
+    });
+  }
+
+  if (!existing) {
     const total = await prisma.adminUser.count();
     if (total === 0) {
-      const defaultEmail = process.env.ADMIN_CREATE_EMAIL || "admin@pcstore.bj";
-      const defaultPassword = process.env.ADMIN_CREATE_PASSWORD || "pcstore2026";
       const passwordHash = await bcrypt.hash(defaultPassword, 10);
       await prisma.adminUser.upsert({
         where: { email: defaultEmail },
