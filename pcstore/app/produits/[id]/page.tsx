@@ -29,6 +29,10 @@ export default async function ProductPage({ params }: { params: { id: string } }
       <Header />
 
       <div className="px-[6%] pt-5 text-[0.8rem] font-medium text-muted">
+        <Link href="/" className="hover:text-violet-deep">
+          Accueil
+        </Link>{" "}
+        /{" "}
         <Link href="/catalogue" className="hover:text-violet-deep">
           Catalogue
         </Link>{" "}

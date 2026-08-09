@@ -9,7 +9,7 @@
   --surface-2: #f3f1fb;
   --line: #e4e1f0;
   --text: #16151f;
-  --muted: #6b6a78;
+  --muted: #56546b;
   --lime: #c6ff3f;
   --lime-ink: #16210a;
   --navy: #15131f;
@@ -40,6 +40,7 @@
   }
   h1, h2, h3, h4 {
     font-family: var(--font-sora), "Sora", sans-serif;
+    text-wrap: balance;
   }
   .mono {
     font-family: var(--font-inter), "Inter", sans-serif;
