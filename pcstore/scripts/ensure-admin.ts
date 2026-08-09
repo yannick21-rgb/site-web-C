@@ -3,14 +3,10 @@ import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
-const ADMIN_EMAIL = process.env.ADMIN_CREATE_EMAIL;
-const ADMIN_PASSWORD = process.env.ADMIN_CREATE_PASSWORD;
+const ADMIN_EMAIL = process.env.ADMIN_CREATE_EMAIL || "admin@pcstore.bj";
+const ADMIN_PASSWORD = process.env.ADMIN_CREATE_PASSWORD || "pcstore2026";
 
 async function main() {
-  if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
-    console.log("[ensure-admin] ADMIN_CREATE_EMAIL/ADMIN_CREATE_PASSWORD absents : admin inchangé.");
-    return;
-  }
   if (ADMIN_PASSWORD.length < 8) {
     console.error("[ensure-admin] Le mot de passe doit contenir au moins 8 caractères.");
     process.exit(1);
