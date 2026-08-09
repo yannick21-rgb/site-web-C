@@ -31,7 +31,19 @@ export async function POST(request: Request) {
 
   const admin = await prisma.adminUser.findUnique({ where: { email: loginEmail } });
   if (!admin || !(await bcrypt.compare(password, admin.passwordHash))) {
-    return NextResponse.json({ error: "Identifiants incorrects." }, { status: 401 });
+    const total = await prisma.adminUser.count();
+    return NextResponse.json(
+      {
+        error: "Identifiants incorrects.",
+        debug: {
+          total,
+          foundEmail: admin?.email ?? null,
+          loginEmail,
+          defaultEmail,
+        },
+      },
+      { status: 401 }
+    );
   }
 
   const token = await createSession(admin.email);
