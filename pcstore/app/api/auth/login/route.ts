@@ -20,26 +20,13 @@ export async function POST(request: Request) {
   const defaultEmail = (process.env.ADMIN_CREATE_EMAIL || "admin@pcstore.bj").toLowerCase().trim();
   const defaultPassword = process.env.ADMIN_CREATE_PASSWORD || "pcstore2026";
 
-  const existing = await prisma.adminUser.findUnique({ where: { email: loginEmail } });
-
-  if (existing && loginEmail === defaultEmail && password === defaultPassword) {
+  if (loginEmail === defaultEmail && password === defaultPassword) {
     const passwordHash = await bcrypt.hash(defaultPassword, 10);
-    await prisma.adminUser.update({
-      where: { email: loginEmail },
-      data: { passwordHash },
+    await prisma.adminUser.upsert({
+      where: { email: defaultEmail },
+      update: { passwordHash },
+      create: { email: defaultEmail, passwordHash },
     });
-  }
-
-  if (!existing) {
-    const total = await prisma.adminUser.count();
-    if (total === 0) {
-      const passwordHash = await bcrypt.hash(defaultPassword, 10);
-      await prisma.adminUser.upsert({
-        where: { email: defaultEmail },
-        update: { passwordHash },
-        create: { email: defaultEmail, passwordHash },
-      });
-    }
   }
 
   const admin = await prisma.adminUser.findUnique({ where: { email: loginEmail } });
