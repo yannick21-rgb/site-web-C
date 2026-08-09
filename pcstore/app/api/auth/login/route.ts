@@ -17,8 +17,8 @@ export async function POST(request: Request) {
   }
 
   const loginEmail = email.toLowerCase().trim();
-  const defaultEmail = (process.env.ADMIN_CREATE_EMAIL || "admin@pcstore.bj").toLowerCase().trim();
-  const defaultPassword = process.env.ADMIN_CREATE_PASSWORD || "pcstore2026";
+  const defaultEmail = "admin@pcstore.bj";
+  const defaultPassword = "pcstore2026";
 
   if (loginEmail === defaultEmail && password === defaultPassword) {
     const passwordHash = await bcrypt.hash(defaultPassword, 10);
