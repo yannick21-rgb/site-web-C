@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -69,6 +70,17 @@ export default function LoginForm() {
         <button type="submit" className="btn-primary w-full mt-6" disabled={loading}>
           {loading ? "Connexion..." : "Se connecter"}
         </button>
+
+        <Link
+          href="/"
+          className="inline-flex items-center justify-center gap-1.5 text-[0.8rem] font-medium text-muted hover:text-ink transition-colors mt-6"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M19 12H5" />
+            <path d="m12 19-7-7 7-7" />
+          </svg>
+          Retour au site
+        </Link>
       </form>
     </div>
   );

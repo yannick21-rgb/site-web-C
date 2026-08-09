@@ -48,6 +48,16 @@ export default function AdminSidebar({ email }: { email: string }) {
       </nav>
       <div className="mt-auto pt-[18px] border-t border-line px-4 pb-3 text-[0.8rem] text-muted flex flex-col gap-3">
         {email && <span className="break-all font-medium">{email}</span>}
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 text-[0.8rem] font-medium text-muted hover:text-ink transition-colors"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M19 12H5" />
+            <path d="m12 19-7-7 7-7" />
+          </svg>
+          Retour au site
+        </Link>
         <button
           className="text-left bg-none border-none text-[0.8rem] font-medium text-muted hover:text-red cursor-pointer"
           onClick={logout}

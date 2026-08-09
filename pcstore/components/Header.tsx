@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import SideRail from "@/components/SideRail";
 
 const NAV = [
   { href: "/catalogue", label: "Catalogue" },
@@ -12,7 +13,9 @@ export default function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="relative z-[5] px-[6%] py-[24px] flex items-center justify-between">
+    <>
+      <SideRail />
+      <header className="relative z-[5] px-[6%] py-[24px] flex items-center justify-between">
       <Link
         href="/"
         className="font-sora text-[1.35rem] font-extrabold tracking-tight"
@@ -69,6 +72,7 @@ export default function Header() {
           </Link>
         </div>
       )}
-    </header>
+      </header>
+    </>
   );
 }

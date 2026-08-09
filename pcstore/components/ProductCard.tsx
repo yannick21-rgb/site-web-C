@@ -9,7 +9,12 @@ export default function ProductCard({ product }: { product: Product }) {
   const stockText = stock <= 0 ? "Rupture" : `${stock} en stock`;
 
   return (
-    <div className="card p-[22px] flex flex-col">
+    <div className="card p-[22px] flex flex-col relative">
+      <Link
+        href={`/produits/${product.id}`}
+        className="absolute inset-0 z-[1] rounded-[20px]"
+        aria-label={`Voir la fiche du ${product.name}`}
+      />
       <div className="relative aspect-[16/10] rounded-[16px] overflow-hidden bg-[linear-gradient(135deg,#e7e1ff_0%,#f4eaff_55%,#eef0fb_100%)] mb-[18px] flex items-center justify-center">
         <div className="absolute w-[150px] h-[150px] rounded-full bg-[radial-gradient(circle,rgba(139,124,246,0.3),transparent_70%)]"></div>
         <span className="relative font-sora font-extrabold text-[2.6rem] text-[#8b7cf6]/45 select-none">
@@ -34,7 +39,7 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
         <Link
           href={`/reserver?produit=${product.id}`}
-          className={`w-11 h-11 rounded-full bg-lime text-lime-ink flex items-center justify-center shadow-[0_10px_20px_-6px_rgba(198,255,63,0.65)] transition-transform hover:scale-110 ${
+          className={`relative z-[2] w-11 h-11 rounded-full bg-lime text-lime-ink flex items-center justify-center shadow-[0_10px_20px_-6px_rgba(198,255,63,0.65)] transition-transform hover:scale-110 ${
             stock <= 0 ? "pointer-events-none opacity-40 grayscale" : ""
           }`}
           aria-label={`Réserver le ${product.name}`}
