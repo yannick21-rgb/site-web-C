@@ -38,11 +38,11 @@ export default function LoginForm() {
         className="w-full max-w-[400px] bg-white border border-line rounded-[28px] p-9 shadow-[0_30px_70px_-30px_rgba(107,91,216,0.5)]"
       >
         <div className="font-sora font-extrabold text-[1.2rem] mb-6">
-          PC<span>Store</span>{" "}
+          CAPIE GROUP{" "}
           <span className="text-muted text-[0.72rem] font-semibold uppercase tracking-[2px]">admin</span>
         </div>
         <h1 className="font-sora font-bold text-[1.4rem] mb-1">Connexion</h1>
-        <p className="text-muted text-[0.85rem] mb-7">Accès réservé à l&apos;équipe PCStore.</p>
+        <p className="text-muted text-[0.85rem] mb-7">Accès réservé à l&apos;équipe CAPIE GROUP.</p>
 
         <div className="flex flex-col gap-4">
           <input

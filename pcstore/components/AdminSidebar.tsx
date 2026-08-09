@@ -22,7 +22,7 @@ export default function AdminSidebar({ email }: { email: string }) {
   return (
     <aside className="bg-white border-r border-line p-[20px] flex flex-col gap-1 lg:min-h-screen">
       <div className="font-sora font-extrabold text-[1.1rem] px-[12px] mb-8">
-        PC<span>Store</span>{" "}
+        CAPIE GROUP{" "}
         <span className="text-muted text-[0.68rem] font-semibold uppercase tracking-[2px]">admin</span>
       </div>
       <nav className="flex lg:flex-col gap-1.5">

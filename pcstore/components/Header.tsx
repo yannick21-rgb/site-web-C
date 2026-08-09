@@ -21,7 +21,7 @@ export default function Header() {
         className="font-sora text-[1.35rem] font-extrabold tracking-tight"
         onClick={() => setOpen(false)}
       >
-        PC<span className="text-[length:inherit]">Store</span>
+        CAPIE GROUP
         <span className="ml-[3px] inline-block w-[9px] h-[9px] rounded-full bg-lime align-middle"></span>
       </Link>
 

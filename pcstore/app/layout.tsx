@@ -17,7 +17,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "PCStore — Le bon PC, pas le PC par défaut",
+  title: "CAPIE GROUP — SOVECOM",
   description:
     "Ordinateurs à Cotonou : catalogue, réservation sans paiement en ligne, et recommandation selon ton usage.",
 };

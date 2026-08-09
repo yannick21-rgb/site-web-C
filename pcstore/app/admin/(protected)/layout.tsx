@@ -3,7 +3,7 @@ import { getSessionEmail } from "@/lib/auth";
 import AdminSidebar from "@/components/AdminSidebar";
 
 export const metadata: Metadata = {
-  title: "Admin — PCStore",
+  title: "Admin — CAPIE GROUP",
 };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
