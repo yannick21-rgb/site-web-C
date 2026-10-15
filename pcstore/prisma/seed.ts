@@ -138,9 +138,21 @@ async function main() {
   }
 
   console.log("Création de l'admin par défaut...");
-  const passwordHash = await bcrypt.hash("pcstore2026", 10);
-  await prisma.adminUser.create({
-    data: { email: "admin@pcstore.bj", passwordHash },
+  // Le mot de passe vient de l'environnement. En son absence, le seed ne crée
+  // aucun compte : un mot de passe codé en dur finirait par être commité.
+  const seedPassword = process.env.ADMIN_SEED_PASSWORD;
+  if (!seedPassword) {
+    console.log(
+      "ADMIN_SEED_PASSWORD non défini : aucun admin n'est créé par le seed. " +
+        "Utilisez `npm run admin:create` pour en créer un."
+    );
+    return;
+  }
+  const passwordHash = await bcrypt.hash(seedPassword, 10);
+  await prisma.adminUser.upsert({
+    where: { email: "admin@pcstore.bj" },
+    update: { passwordHash },
+    create: { email: "admin@pcstore.bj", passwordHash },
   });
 
   console.log("Seed terminé.");

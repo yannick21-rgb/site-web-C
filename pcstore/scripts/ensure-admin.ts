@@ -4,9 +4,17 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 const ADMIN_EMAIL = process.env.ADMIN_CREATE_EMAIL || "admin@pcstore.bj";
-const ADMIN_PASSWORD = process.env.ADMIN_CREATE_PASSWORD || "pcstore2026";
+// Aucun mot de passe par défaut : il doit être fourni explicitement, sinon
+// un mot de passe public se retrouverait dans la base à chaque build.
+const ADMIN_PASSWORD = process.env.ADMIN_CREATE_PASSWORD;
 
 async function main() {
+  if (!ADMIN_PASSWORD) {
+    console.error(
+      "[ensure-admin] ADMIN_CREATE_PASSWORD est requis. Aucun mot de passe par défaut n'est utilisé."
+    );
+    process.exit(1);
+  }
   if (ADMIN_PASSWORD.length < 8) {
     console.error("[ensure-admin] Le mot de passe doit contenir au moins 8 caractères.");
     process.exit(1);

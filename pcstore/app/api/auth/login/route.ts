@@ -17,36 +17,15 @@ export async function POST(request: Request) {
   }
 
   const loginEmail = email.toLowerCase().trim();
-  const defaultEmail = "admin@pcstore.bj";
-  const defaultPassword = "pcstore2026";
-
-  if (loginEmail === defaultEmail && password === defaultPassword) {
-    const passwordHash = await bcrypt.hash(defaultPassword, 10);
-    await prisma.adminUser.upsert({
-      where: { email: defaultEmail },
-      update: { passwordHash },
-      create: { email: defaultEmail, passwordHash },
-    });
-  }
 
   const admin = await prisma.adminUser.findUnique({ where: { email: loginEmail } });
-  if (!admin || !(await bcrypt.compare(password, admin.passwordHash))) {
-    const total = await prisma.adminUser.count();
-    return NextResponse.json(
-      {
-        error: "Identifiants incorrects.",
-        debug: {
-          total,
-          foundEmail: admin?.email ?? null,
-          loginEmail,
-          defaultEmail,
-        },
-      },
-      { status: 401 }
-    );
+  const valid = admin ? await bcrypt.compare(password, admin.passwordHash) : false;
+
+  if (!valid) {
+    return NextResponse.json({ error: "Identifiants incorrects." }, { status: 401 });
   }
 
-  const token = await createSession(admin.email);
+  const token = await createSession(admin!.email);
   setSessionCookie(token);
 
   return NextResponse.json({ ok: true });

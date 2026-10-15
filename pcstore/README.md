@@ -12,21 +12,40 @@ La documentation générale du projet se trouve dans `../README.md`.
 npm install
 cp .env.example .env   # puis éditer les valeurs
 npm run db:push        # crée la base SQLite + le client
-npm run db:seed        # 6 produits + admin par défaut
+npm run db:seed        # 6 produits (aucun admin sans ADMIN_SEED_PASSWORD)
+npm run admin:create   # crée l'admin à partir de ADMIN_CREATE_EMAIL / ADMIN_CREATE_PASSWORD
 npm run dev
 ```
 
-Admin de démo : `admin@pcstore.bj` / `pcstore2026` — à changer après le premier login.
+## Compte administrateur
+
+**Aucun identifiant par défaut n'est plus embarqué dans le code.** L'admin est créé
+explicitement à partir de l'environnement :
+
+```bash
+ADMIN_CREATE_EMAIL="toi@exemple.com" ADMIN_CREATE_PASSWORD="un-mot-de-passe-long" \
+  npm run admin:create
+```
+
+Puis connecte-toi sur `/admin/login` avec ces identifiants, et retire
+`ADMIN_CREATE_PASSWORD` de l'environnement.
+
+> Le mot de passe doit faire au moins 8 caractères. Il est stocké haché (bcrypt),
+> jamais en clair.
 
 ## Variables d'environnement
 
 | Variable | Rôle |
 |----------|------|
 | `DATABASE_URL` | `file:./dev.db` en local, PostgreSQL sur Vercel |
-| `AUTH_SECRET` | Secret HMAC des sessions admin (obligatoire en prod) |
+| `AUTH_SECRET` | **Secret HMAC des sessions admin — obligatoire.** Sans lui, aucune session n'est valide. ≥ 32 caractères. |
+| `ADMIN_CREATE_EMAIL` / `ADMIN_CREATE_PASSWORD` | Identifiants pour `npm run admin:create` |
+| `ADMIN_SEED_PASSWORD` | Mot de passe de l'admin créé par `npm run db:seed` (optionnel) |
 | `ADMIN_NOTIF_EMAIL` | Email de l'admin qui reçoit les notifications de réservation |
 | `EMAIL_FROM` | Expéditeur des emails (domaine validé Resend en prod) |
 | `RESEND_API_KEY` | Clé API Resend. Absente → notifications en mode log (dev) |
+
+> Génère `AUTH_SECRET` avec : `openssl rand -base64 32`
 
 ## Règles métier
 
@@ -80,9 +99,15 @@ Le provider Prisma est **détecté automatiquement** d'après `DATABASE_URL` (vi
    gère le cache seul.
 4. Initialiser la base de prod (migration + données) :
    ```bash
-   DATABASE_URL="postgresql://…" npm run db:deploy   # schéma + seed (admin de démo + produits)
+   DATABASE_URL="postgresql://…" npm run db:deploy   # schéma + seed (produits)
    ```
-   ou lancer `npm run admin:create` après `db:deploy` pour créer un admin à ton adresse.
+   puis créer l'admin avec un mot de passe **fourni à l'exécution** :
+   ```bash
+   DATABASE_URL="postgresql://…" \
+     ADMIN_CREATE_EMAIL="toi@exemple.com" ADMIN_CREATE_PASSWORD="…" \
+     npm run admin:create
+   ```
+   Ne laisse jamais `ADMIN_CREATE_PASSWORD` dans le dépôt.
 5. Pousser la branche `main` → Vercel redéploie automatiquement.
 
 > Note : `prisma db push` côté prod sans pré-migration est volontaire (pas encore de

@@ -2,12 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 
 const SESSION_COOKIE = "pcstore_admin_session";
 
+/**
+ * Sans AUTH_SECRET, aucune session n'est considérée valide : on échoue
+ * fermé. Un fallback sur un secret public permettrait de forger un cookie
+ * d'admin à partir du code source publié de ce dépôt.
+ */
+function getSecret(): string | null {
+  return process.env.AUTH_SECRET || null;
+}
+
 async function verifyToken(token: string): Promise<boolean> {
+  const secret = getSecret();
+  if (!secret) return false;
   const parts = token.split("|");
   if (parts.length !== 3) return false;
   const [email, expiry, sig] = parts;
   if (!email || !expiry || Date.now() > Number(expiry)) return false;
-  const secret = process.env.AUTH_SECRET || "dev-secret-pcstore";
   const data = new TextEncoder().encode(`${email}|${expiry}`);
   const key = await crypto.subtle.importKey(
     "raw",

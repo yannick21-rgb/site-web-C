@@ -3,6 +3,21 @@ import { cookies } from "next/headers";
 const SESSION_COOKIE = "pcstore_admin_session";
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 jours
 
+/**
+ * Le secret de signature est obligatoire. Sans AUTH_SECRET, aucune session
+ * ne peut être émise ni vérifiée : on échoue fermé plutôt que de tomber
+ * sur un secret connu de tous (et publié dans ce dépôt).
+ */
+function getSecret(): string {
+  const secret = process.env.AUTH_SECRET;
+  if (!secret) {
+    throw new Error(
+      "AUTH_SECRET est requis. Définissez-le dans l'environnement (≥ 32 caractères)."
+    );
+  }
+  return secret;
+}
+
 export async function createSession(email: string): Promise<string> {
   const payload = `${email}|${Date.now() + SESSION_TTL_MS}`;
   const sig = await sign(payload);
@@ -41,7 +56,7 @@ export async function getSessionEmail(): Promise<string | null> {
 }
 
 async function sign(input: string): Promise<string> {
-  const secret = process.env.AUTH_SECRET || "dev-secret-pcstore";
+  const secret = getSecret();
   const data = new TextEncoder().encode(input);
   const key = await crypto.subtle.importKey(
     "raw",
